@@ -243,6 +243,10 @@ let app = express();
 let mcache = require("memory-cache");
 let expirationTime = 60 * 4; // 60 seconds
 
+app.get("/", (req, res) => {
+    return res.status(200).send("Server response.");
+});
+
 app.get("/subreddit/:sub/:sort", cache(expirationTime), function(req, res){
     let sub = r.getSubreddit(req.params.sub);
     let sort = req.params.sort;
