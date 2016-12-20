@@ -58,22 +58,21 @@ app.get("/", (req, res) => {
 });
 
 app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
-    let sub = reddit.getSubreddit(req.params.sub);
-    let sort = req.params.sort;
+    let subreddit = req.params.sub.toLowerCase();
+    let sort = req.params.sort.toLowerCase();
+    let sub = reddit.getSubreddit(subreddit);
 
     switch (sort) {
         case "new":
-            sub = sub.getNew();
-            break;
+            sub = sub.getNew(); break;
         case "hot":
-            sub = sub.getHot();
-            break;
+            sub = sub.getHot(); break;
         case "rising":
-            sub = sub.getRising();
-            break;
+            sub = sub.getRising(); break;
         case "top":
-            sub = sub.getTop();
-            break;
+            sub = sub.getTop(); break;
+        case "controversial":
+            sub = sub.getControversial(); break;
         default:
             return res.status(404).json({error: "Invalid Sort Type"}).end();
     }
