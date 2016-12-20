@@ -85,18 +85,31 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
             return res.status(404).json({error: "Invalid Sort Type"}).end();
     }
 
-    sub
-        .map(data => JSON.parse(JSON.stringify(data)))
-        .then(data => data.map(listing => _.omit(listing, ommittedKeys)))
-        .then(data => data.map(listing => {
+    function format(data) {
+        return JSON.parse(JSON.stringify(data));
+    }
+
+    function removeOmittedKeys(data, keys) {
+        return data.map(listing => {
+            return _.omit(listing, ommittedKeys);
+        });
+    }
+
+    function addHamletMedia(data) {
+        return data.map(listing => {
             listing.hamlet_media = null;
             return listing;
-        }))
-        .then(Fetcher.fetchAllMedia)
-        .then(data => data.map(listing => _.omit(listing, ['preview'])))
+        });
+    }
+
+    sub
+        .map(format)
+        .then(data => removeOmittedKeys(data, ommittedKeys))
+        .then(addHamletMedia)
+        .then(data => Fetcher.fetchAllMedia(data, Services))
+        .then(data => removeOmittedKeys(data, ["preview"]))
         .then(data => res.json(data))
         .catch(error => {
-            console.error(error);
             res.status(404).json({error: "Something went wrong."});
         });
 });
