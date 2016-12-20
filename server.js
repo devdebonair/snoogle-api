@@ -8,6 +8,7 @@ const Imgur = require('imgur');
 const _ = require('lodash');
 const app = express();
 
+const Services = { imgur: Imgur, gfycat: request };
 const PORT = process.env.PORT || 3000;
 const expirationTime = 60 * 4; // 60 seconds
 
@@ -36,7 +37,6 @@ let ommittedKeys = [
 
 let extractMedia = function(data) {
     let promises = [];
-    let services = { imgur: Imgur, gfycat: request };
     for(let listing of data) {
         promises.push(Fetcher.fetchMedia(listing, services));
     }
@@ -67,7 +67,7 @@ app.get("/", (req, res) => {
 app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
     let sub = Reddit.getSubreddit(req.params.sub);
     let sort = req.params.sort;
-    
+
     switch (sort) {
         case "new":
             sub = sub.getNew();
@@ -92,7 +92,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
             listing.hamlet_media = null;
             return listing;
         }))
-        .then(extractMedia)
+        .then(Fetcher.fetchAllMedia)
         .then(data => data.map(listing => _.omit(listing, ['preview'])))
         .then(data => res.json(data))
         .catch(error => {

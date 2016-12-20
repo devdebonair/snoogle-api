@@ -35,3 +35,11 @@ exports.fetchMedia = function fetchMedia(listing, services) {
         }
     }
 };
+
+exports.fetchAllMedia = function fetchAllMedia(listings, services) {
+    let promises = [];
+    for(let listing of listings) {
+        promises.push(exports.fetchMedia(listing, services));
+    }
+    return Promise.all(promises);
+};
