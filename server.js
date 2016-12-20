@@ -91,7 +91,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
 
     function removeOmittedKeys(data, keys) {
         return data.map(listing => {
-            return _.omit(listing, ommittedKeys);
+            return _.omit(listing, keys);
         });
     }
 
