@@ -265,7 +265,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
             sub = sub.getTop();
             break;
         default:
-            return res.status(404).json({message: "Invalid Sort Type"}).end();
+            return res.status(404).json({error: "Invalid Sort Type"}).end();
     }
     sub
         .map(data => JSON.parse(JSON.stringify(data)))
