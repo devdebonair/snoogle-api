@@ -109,9 +109,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
         .then(data => Fetcher.fetchAllMedia(data, Services))
         .then(data => removeOmittedKeys(data, ["preview"]))
         .then(res.json)
-        .catch(error => {
-            res.status(404).json({error: "Something went wrong."});
-        });
+        .catch(res.status(404).send);
 });
 
 app.listen(PORT, _ => {});
