@@ -4,6 +4,7 @@ const Imgur = require('imgur');
 const Gfycat = require('gfycat-sdk');
 const request = require('request-promise').defaults({pool: { maxSockets: 100000}});
 const _ = require('lodash');
+const PORT = process.env.PORT || 3000;
 
 const gfycat = new Gfycat({
     clientId: "2_jVHv6U",
@@ -283,6 +284,4 @@ app.get("/subreddit/:sub/:sort", cache(expirationTime), function(req, res){
         });
 });
 
-app.listen(3000, function(){
-    console.log("Listening on port 3000.");
-});
+app.listen(PORT, _ => {});
