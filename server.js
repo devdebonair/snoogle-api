@@ -16,7 +16,8 @@ const gfycat = new Gfycat({
     clientId: "2_jVHv6U",
     clientSecret: "nK9Fd6mwZQi7qDArJU3kb-hwMW2DeBeSmdbNIL2axQgNusg-_Wt18V-zXtlTxuN2"
 });
-const Reddit = new snoowrap({
+
+const reddit = new snoowrap({
   userAgent: 'nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)',
   clientId: 'jiNIOlneh6TvXQ',
   clientSecret: 'w_9H062IvMDAS2Pb2s2Vyl5ZecU',
@@ -34,14 +35,6 @@ let ommittedKeys = [
     'media_embed',
     'selftext_html'
 ];
-
-let extractMedia = function(data) {
-    let promises = [];
-    for(let listing of data) {
-        promises.push(Fetcher.fetchMedia(listing, services));
-    }
-    return Promise.all(promises);
-};
 
 var cache = (duration) => {
     return (req, res, next) => {
@@ -65,7 +58,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
-    let sub = Reddit.getSubreddit(req.params.sub);
+    let sub = reddit.getSubreddit(req.params.sub);
     let sort = req.params.sort;
 
     switch (sort) {
@@ -85,11 +78,12 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
             return res.status(404).json({error: "Invalid Sort Type"}).end();
     }
 
-    function format(data) {
-        return JSON.parse(JSON.stringify(data));
-    }
+    function format(data) { return JSON.parse(JSON.stringify(data)); }
+    function removeOmittedKeys(data) { return omitKeys(data, ommittedKeys); }
+    function removePreviewKey(data) { return omitKeys(data, ["preview"]); }
+    function fetchMedia(data) { return Fetcher.fetchAllMedia(data, Services); }
 
-    function removeOmittedKeys(data, keys) {
+    function omitKeys(data, keys) {
         return data.map(listing => {
             return _.omit(listing, keys);
         });
@@ -104,10 +98,10 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
 
     sub
         .map(format)
-        .then(data => removeOmittedKeys(data, ommittedKeys))
+        .then(removeOmittedKeys)
         .then(addHamletMedia)
-        .then(data => Fetcher.fetchAllMedia(data, Services))
-        .then(data => removeOmittedKeys(data, ["preview"]))
+        .then(fetchMedia)
+        .then(removePreviewKey)
         .then(res.json)
         .catch(res.status(404).send);
 });
