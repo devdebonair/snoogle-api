@@ -269,7 +269,7 @@ app.get("/subreddit/:sub/:sort", cache(expirationTime), function(req, res){
             listing.hamlet_media = null;
             return listing;
         }))
-        // .then(extractMedia)
+        .then(extractMedia)
         .then(data => data.map(listing => _.omit(listing, ['preview'])))
         .then(data => res.json(data))
         .catch(error => {
