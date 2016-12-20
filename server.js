@@ -108,7 +108,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
         .then(addHamletMedia)
         .then(data => Fetcher.fetchAllMedia(data, Services))
         .then(data => removeOmittedKeys(data, ["preview"]))
-        .then(data => res.json(data))
+        .then(res.json)
         .catch(error => {
             res.status(404).json({error: "Something went wrong."});
         });
