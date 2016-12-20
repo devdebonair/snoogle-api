@@ -6,7 +6,6 @@ const Gfycat = require('gfycat-sdk');
 const express = require("express");
 const Imgur = require('imgur');
 const _ = require('lodash');
-const url = require('url');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -37,32 +36,9 @@ let ommittedKeys = [
 
 let extractMedia = function(data) {
     let promises = [];
+    let services = { imgur: Imgur, gfycat: request };
     for(let listing of data) {
-        let linkUrl = url.parse(listing.url);
-        let hostname = linkUrl.hostname;
-        let regex = /[^\/]+(?=\/$|$)/g;
-        if(regex.test(listing.url)) {
-            let listingID = listing.url.match(regex)[0].replace(/\.[A-Za-z]+/g, "");
-            if(hostname.toLowerCase().includes('imgur')){
-                if(linkUrl.pathname.includes('/a/') || linkUrl.pathname.includes('/gallery/')){
-                    promises.push(Fetcher.imgur.album(Imgur, listing, listingID));
-                } else {
-                    promises.push(Fetcher.imgur.image(Imgur, listing, listingID));
-                }
-            } else if(hostname.toLowerCase().includes('gfycat')){
-                let options = {
-                    uri: `https://gfycat.com/cajax/get/${listingID}`,
-                    json: true,
-                    forever: true,
-                    headers: { "user-agent": "nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)" }
-                };
-                promises.push(Fetcher.gfycat(request, options, listing));
-            } else if(!_.isEmpty(listing.preview)) {
-                promises.push(Fetcher.variant(listing));
-            } else {
-                promises.push(Fetcher.blank(listing));
-            }
-        }
+        promises.push(Fetcher.fetchMedia(listing, services));
     }
     return Promise.all(promises);
 };
@@ -91,6 +67,7 @@ app.get("/", (req, res) => {
 app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
     let sub = Reddit.getSubreddit(req.params.sub);
     let sort = req.params.sort;
+    
     switch (sort) {
         case "new":
             sub = sub.getNew();
@@ -107,6 +84,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
         default:
             return res.status(404).json({error: "Invalid Sort Type"}).end();
     }
+
     sub
         .map(data => JSON.parse(JSON.stringify(data)))
         .then(data => data.map(listing => _.omit(listing, ommittedKeys)))
@@ -118,7 +96,7 @@ app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
         .then(data => data.map(listing => _.omit(listing, ['preview'])))
         .then(data => res.json(data))
         .catch(error => {
-            console.log(error);
+            console.error(error);
             res.status(404).json({error: "Something went wrong."});
         });
 });
