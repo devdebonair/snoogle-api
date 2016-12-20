@@ -273,7 +273,7 @@ app.get("/subreddit/:sub/:sort", cache(expirationTime), function(req, res){
         .then(data => data.map(listing => _.omit(listing, ['preview'])))
         .then(data => res.json(data))
         .catch(error => {
-            res.status(404).send("Something is not working.");
+            res.status(404).json({error: "Something went wrong."});
         });
 });
 
