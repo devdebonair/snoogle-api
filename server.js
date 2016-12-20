@@ -10,7 +10,7 @@ const gfycat = new Gfycat({
     clientId: "2_jVHv6U",
     clientSecret: "nK9Fd6mwZQi7qDArJU3kb-hwMW2DeBeSmdbNIL2axQgNusg-_Wt18V-zXtlTxuN2"
 });
-const r = new snoowrap({
+const Reddit = new snoowrap({
   userAgent: 'nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)',
   clientId: 'jiNIOlneh6TvXQ',
   clientSecret: 'w_9H062IvMDAS2Pb2s2Vyl5ZecU',
@@ -248,8 +248,8 @@ app.get("/", (req, res) => {
     return res.status(200).send("Server response.");
 });
 
-app.get("/subreddit/:sub/:sort", cache(expirationTime), function(req, res){
-    let sub = r.getSubreddit(req.params.sub);
+app.get("/r/:sub/:sort", cache(expirationTime), function(req, res){
+    let sub = Reddit.getSubreddit(req.params.sub);
     let sort = req.params.sort;
     switch (sort) {
         case "new":
