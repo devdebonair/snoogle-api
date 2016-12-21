@@ -37,7 +37,8 @@ const ommittedKeys = [
     'secure_media_embed',
     'media',
     'media_embed',
-    'selftext_html'
+    'selftext_html',
+    'preview'
 ];
 
 var cache = (duration) => {

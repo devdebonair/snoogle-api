@@ -36,12 +36,6 @@ module.exports = class Routes {
                 return res.status(404).json({error: "Invalid Sort Type"}).end();
             }
 
-            function omitKeys(data, keys) {
-                return data.map(listing => {
-                    return _.omit(listing, keys);
-                });
-            }
-
             function addHamletMedia(data) {
                 return data.map(listing => {
                     listing.hamlet_media = null;
@@ -49,17 +43,23 @@ module.exports = class Routes {
                 });
             }
 
-            function format(data) { return JSON.parse(JSON.stringify(data)); }
-            function removeOmittedKeys(data) { return omitKeys(data, ommittedKeys); }
-            function removePreviewKey(data) { return omitKeys(data, ["preview"]); }
+            function format(data) {
+                return data.toJSON();
+            }
+
+            function removeOmittedKeys(data) {
+                return data.map(listing => {
+                    return _.omit(listing, ommittedKeys);
+                });
+            }
+
             function fetchMedia(data) { return self.fetcher.fetchAllMedia(data); }
 
             sub
-            .map(format)
-            .then(removeOmittedKeys)
+            .then(format)
             .then(addHamletMedia)
             .then(fetchMedia)
-            .then(removePreviewKey)
+            .then(removeOmittedKeys)
             .then(res.json)
             .catch(function(error){
                 console.log(error);
