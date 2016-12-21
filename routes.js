@@ -36,24 +36,34 @@ module.exports = class Routes {
                 return res.status(404).json({error: "Invalid Sort Type"}).end();
             }
 
-            function addHamletMedia(data) {
-                return data.map(listing => {
+            function format(listings) {
+                let retval = {};
+                retval.isFinished = listings.isFinished;
+                retval.data = listings.toJSON();
+                return retval;
+            }
+
+            function addHamletMedia(listings) {
+                listings.data.map(listing => {
                     listing.hamlet_media = null;
                     return listing;
                 });
+                return listings;
             }
 
-            function format(data) {
-                return data.toJSON();
-            }
-
-            function removeOmittedKeys(data) {
-                return data.map(listing => {
+            function removeOmittedKeys(listings) {
+                listings.data = listings.data.map(listing => {
                     return _.omit(listing, ommittedKeys);
                 });
+                return listings;
             }
 
-            function fetchMedia(data) { return self.fetcher.fetchAllMedia(data); }
+            function fetchMedia(listings) {
+                return self.fetcher.fetchAllMedia(listings.data).then(function(data){
+                    listings.data = data;
+                    return listings;
+                });
+            }
 
             sub
             .then(format)
