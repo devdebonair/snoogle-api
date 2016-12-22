@@ -34,7 +34,12 @@ module.exports = class Fetcher {
         if(regex.test(listing.url)) {
             let listingID = listing.url.match(regex)[0].replace(/\.[A-Za-z]+/g, "");
             if(hostname.toLowerCase().includes('imgur')){
-                if(linkUrl.pathname.includes('/a/') || linkUrl.pathname.includes('/gallery/')){
+                if(linkUrl.pathname.includes('/a/')){
+                    return this.imgur.album(this.services.imgur, listing, listingID).catch((error) => {
+                        listing.hamlet_errors.push(error);
+                        return listing;
+                    });
+                } else if(linkUrl.pathname.includes('/gallery/')){
                     return this.imgur.album(this.services.imgur, listing, listingID).catch((error) => {
                         listing.hamlet_errors.push(error);
                         return listing;
