@@ -32,27 +32,27 @@ module.exports = class Fetcher {
         let hostname = linkUrl.hostname;
         let regex = /[^\/]+(?=\/$|$)/g;
         if(regex.test(listing.url)) {
-            let listingID = listing.url.match(regex)[0].replace(/\.[A-Za-z]+/g, "");
+            let mediaID = listing.url.match(regex)[0].replace(/\.[A-Za-z]+/g, "");
             if(hostname.toLowerCase().includes('imgur')){
                 if(linkUrl.pathname.includes('/a/')){
-                    return this.imgur.album(this.services.imgur, listing, listingID).catch((error) => {
+                    return this.imgur.album(this.services.imgur, listing, mediaID).catch((error) => {
                         listing.hamlet_errors.push(error);
                         return listing;
                     });
                 } else if(linkUrl.pathname.includes('/gallery/')){
-                    return this.imgur.album(this.services.imgur, listing, listingID).catch((error) => {
+                    return this.imgur.album(this.services.imgur, listing, mediaID).catch((error) => {
                         listing.hamlet_errors.push(error);
                         return listing;
                     });
                 } else {
-                    return this.imgur.image(this.services.imgur, listing, listingID).catch((error) => {
+                    return this.imgur.image(this.services.imgur, listing, mediaID).catch((error) => {
                         listing.hamlet_errors.push(error);
                         return listing;
                     });
                 }
             } else if(hostname.toLowerCase().includes('gfycat')){
                 let options = {
-                    uri: `https://gfycat.com/cajax/get/${listingID}`,
+                    uri: `https://gfycat.com/cajax/get/${mediaID}`,
                     json: true,
                     forever: true,
                     headers: { "user-agent": "nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)" }
