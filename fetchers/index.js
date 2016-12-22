@@ -1,10 +1,10 @@
 const url = require("url");
 const _ = require("lodash");
 
-let blank = require("./fetcher-blank");
-let variant = require("./fetcher-variant");
-let gfycat = require("./fetcher-gfycat");
-let imgur = {
+const blank = require("./fetcher-blank");
+const variant = require("./fetcher-variant");
+const gfycat = require("./fetcher-gfycat");
+const imgur = {
     image: require("./fetcher-imgur-image"),
     album: require("./fetcher-imgur-album")
 };
