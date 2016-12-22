@@ -75,7 +75,6 @@ module.exports = class Routes {
             .then(removeOmittedKeys)
             .then(res.json)
             .catch(function(error){
-                console.log(error);
                 return res.status(404).send(error).end();
             });
         };
