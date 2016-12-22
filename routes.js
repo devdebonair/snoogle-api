@@ -25,7 +25,7 @@ module.exports = class Routes {
                 case "new":
                 sub = sub.getNew(); break;
                 case "hot":
-                sub = sub.getHot(); break;
+                sub = sub.getHot({after: "t3_5icru7"}); break;
                 case "rising":
                 sub = sub.getRising(); break;
                 case "top":
@@ -45,7 +45,8 @@ module.exports = class Routes {
 
             function addHamletMedia(listings) {
                 listings.data.map(listing => {
-                    listing.hamlet_media = null;
+                    listing.hamlet_media = {};
+                    listing.hamlet_errors = [];
                     return listing;
                 });
                 return listings;

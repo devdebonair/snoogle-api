@@ -35,9 +35,15 @@ module.exports = class Fetcher {
             let listingID = listing.url.match(regex)[0].replace(/\.[A-Za-z]+/g, "");
             if(hostname.toLowerCase().includes('imgur')){
                 if(linkUrl.pathname.includes('/a/') || linkUrl.pathname.includes('/gallery/')){
-                    return this.imgur.album(this.services.imgur, listing, listingID);
+                    return this.imgur.album(this.services.imgur, listing, listingID).catch((error) => {
+                        listing.hamlet_errors.push(error);
+                        return listing;
+                    });
                 } else {
-                    return this.imgur.image(this.services.imgur, listing, listingID);
+                    return this.imgur.image(this.services.imgur, listing, listingID).catch((error) => {
+                        listing.hamlet_errors.push(error);
+                        return listing;
+                    });
                 }
             } else if(hostname.toLowerCase().includes('gfycat')){
                 let options = {
@@ -46,7 +52,10 @@ module.exports = class Fetcher {
                     forever: true,
                     headers: { "user-agent": "nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)" }
                 };
-                return this.gfycat(this.services.gfycat, options, listing);
+                return this.gfycat(this.services.gfycat, options, listing).catch((error) => {
+                    listing.hamlet_errors.push(error);
+                    return listing;
+                });
             } else if(!_.isEmpty(listing.preview)) {
                 return this.variant(listing);
             } else {
