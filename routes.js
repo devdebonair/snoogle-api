@@ -20,18 +20,19 @@ module.exports = class Routes {
             let subreddit = req.params.sub.toLowerCase();
             let sort = req.params.sort.toLowerCase();
             let sub = this.services.reddit.getSubreddit(subreddit);
-
+            let after = req.query.after;
+            let options = {after: after};
             switch (sort) {
                 case "new":
-                sub = sub.getNew(); break;
+                sub = sub.getNew(options); break;
                 case "hot":
-                sub = sub.getHot({after: "t3_5icru7"}); break;
+                sub = sub.getHot(options); break;
                 case "rising":
-                sub = sub.getRising(); break;
+                sub = sub.getRising(options); break;
                 case "top":
-                sub = sub.getTop(); break;
+                sub = sub.getTop(options); break;
                 case "controversial":
-                sub = sub.getControversial(); break;
+                sub = sub.getControversial(options); break;
                 default:
                 return res.status(404).json({error: "Invalid Sort Type"}).end();
             }
@@ -39,6 +40,7 @@ module.exports = class Routes {
             function format(listings) {
                 let retval = {};
                 retval.isFinished = listings.isFinished;
+                retval.after = listings[listings.length - 1].name;
                 retval.data = listings.toJSON();
                 return retval;
             }
