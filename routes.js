@@ -40,7 +40,10 @@ module.exports = class Routes {
             function format(listings) {
                 let retval = {};
                 retval.isFinished = listings.isFinished;
-                retval.after = listings[listings.length - 1].name;
+                retval.after = null;
+                if(listings.length > 0) {
+                    retval.after = listings[listings.length - 1].name;
+                }
                 retval.data = listings.toJSON();
                 return retval;
             }
@@ -75,6 +78,7 @@ module.exports = class Routes {
             .then(removeOmittedKeys)
             .then(res.json)
             .catch(function(error){
+                console.log(error);
                 return res.status(404).send(error).end();
             });
         };
