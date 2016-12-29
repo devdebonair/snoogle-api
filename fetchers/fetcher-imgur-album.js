@@ -12,7 +12,7 @@ module.exports = function imgurAlbum(Imgur, listing, listingID) {
                     images.push(extractImgurImage(image));
                 }
             }
-            listing.hamlet_media = images;
+            listing.hamlet_album = images;
         } else if(imagesData.length === 1) {
             if(imagesData[0].type === "image/gif") {
                 listing.hamlet_media = extractImgurVideo(imagesData[0]);

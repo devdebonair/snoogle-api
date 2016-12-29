@@ -51,6 +51,7 @@ module.exports = class Routes {
             function addHamletMedia(listings) {
                 listings.data.map(listing => {
                     listing.hamlet_media = {};
+                    listing.hamlet_album = [];
                     listing.hamlet_errors = [];
                     return listing;
                 });
