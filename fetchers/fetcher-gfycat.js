@@ -7,7 +7,7 @@ module.exports = function gfycat(request, options, listing) {
             poster: data.mobilePosterUrl,
             gif: data.max2mbGif,
             url: data.mobileUrl,
-            description: ""
+            description: null
         };
     };
 
