@@ -75,6 +75,7 @@ module.exports = class Routes {
             function formatSelfText(listings) {
                 listings.data = listings.data.map(listing => {
                     listing.selftext = listing.selftext.replace(/(\n)+/g, "\n");
+                    listing.selftext = listing.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
                     return listing;
                 });
                 return listings;
