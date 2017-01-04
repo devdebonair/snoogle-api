@@ -72,11 +72,20 @@ module.exports = class Routes {
                 });
             }
 
+            function formatSelfText(listings) {
+                listings.data = listings.data.map(listing => {
+                    listing.selftext = listing.selftext.replace(/(\n)+/g, "\n");
+                    return listing;
+                });
+                return listings;
+            }
+
             sub
             .then(format)
             .then(addHamletMedia)
             .then(fetchMedia)
             .then(removeOmittedKeys)
+            .then(formatSelfText)
             .then(res.json)
             .catch(function(error){
                 console.log(error);
