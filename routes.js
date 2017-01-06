@@ -64,7 +64,7 @@ module.exports = class Routes {
             .then(comments => { return flatten(comments); })
             .then(comments => { return comments.map(comment => { return _.omit(comment, ["body_html"]); }); })
             .then((submission) => {
-                return res.status(200).json(submission);
+                return res.status(200).json({data: submission});
             })
             .catch((error) => {
                 console.log(error);
