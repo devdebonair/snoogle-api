@@ -1,6 +1,41 @@
 const _ = require("lodash");
 const Fetcher = require("./fetchers");
 
+function flatten(treeObj, idAttr, parentAttr, childrenAttr, levelAttr) {
+    if (!idAttr) idAttr = 'id';
+    if (!parentAttr) parentAttr = 'parent_id';
+    if (!childrenAttr) childrenAttr = 'replies';
+    if (!levelAttr) levelAttr = 'level';
+
+    function flattenChild(childObj, parentId, level) {
+        var array = [];
+
+        var childCopy = _.extend({}, childObj);
+        childCopy[levelAttr] = level - 1;
+        childCopy[parentAttr] = parentId;
+        delete childCopy[childrenAttr];
+        array.push(childCopy);
+
+        array = array.concat(processChildren(childObj, level));
+
+        return array;
+    }
+
+    function processChildren(obj, level) {
+        if (!level) level = 0;
+        var array = [];
+        obj[childrenAttr].forEach(function(childObj) {
+            array = array.concat(flattenChild(childObj, obj[idAttr], level+1));
+        });
+
+        return array;
+    }
+
+    var result = processChildren(treeObj);
+    return result;
+}
+
+
 module.exports = class Routes {
 
     constructor(services) {
@@ -11,6 +46,30 @@ module.exports = class Routes {
     sendResponse() {
         return (req, res, next) => {
             return res.status(200).send("Server response.");
+        };
+    }
+
+    getSubmission() {
+        let self = this;
+        return (req, res, next) => {
+
+
+            let submissionId = req.params.submissionId;
+            this.services.reddit
+            .getSubmission(submissionId)
+            .expandReplies()
+            .comments
+            .then(comments => comments.toJSON())
+            .then(comments => { return {replies: comments}; })
+            .then(comments => { return flatten(comments); })
+            .then(comments => { return comments.map(comment => { return _.omit(comment, ["body_html"]); }); })
+            .then((submission) => {
+                return res.status(200).json(submission);
+            })
+            .catch((error) => {
+                console.log(error);
+                return res.status(404).json(error);
+            });
         };
     }
 

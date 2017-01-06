@@ -60,5 +60,6 @@ var cache = (duration) => {
 
 app.get("/", router.sendResponse());
 app.get("/r/:sub/:sort", cache(expirationTime), router.getSubreddit(ommittedKeys));
+app.get("/submission/:submissionId", router.getSubmission());
 
 app.listen(PORT, _ => {});
