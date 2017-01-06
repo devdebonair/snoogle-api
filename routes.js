@@ -57,7 +57,6 @@ module.exports = class Routes {
             let submissionId = req.params.submissionId;
             this.services.reddit
             .getSubmission(submissionId)
-            .expandReplies()
             .comments
             .then(comments => comments.toJSON())
             .then(comments => { return {replies: comments}; })
