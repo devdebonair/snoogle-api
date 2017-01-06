@@ -13,13 +13,23 @@ const gfycat = new Gfycat({
     clientSecret: "nK9Fd6mwZQi7qDArJU3kb-hwMW2DeBeSmdbNIL2axQgNusg-_Wt18V-zXtlTxuN2"
 });
 
+// const reddit = new snoowrap({
+//     userAgent: 'nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)',
+//     clientId: 'jiNIOlneh6TvXQ',
+//     clientSecret: 'w_9H062IvMDAS2Pb2s2Vyl5ZecU',
+//     username: 'devdebonair',
+//     password: 'kiddollars'
+// });
+
 const reddit = new snoowrap({
-    userAgent: 'nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/devdebonair)',
-    clientId: 'jiNIOlneh6TvXQ',
-    clientSecret: 'w_9H062IvMDAS2Pb2s2Vyl5ZecU',
-    username: 'devdebonair',
+    userAgent: 'nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/catalystlive)',
+    clientId: 'MeEU261ljtCJMg',
+    clientSecret: 'YQZda7J9vym-9pvT5DlpLPmxd1Y',
+    username: 'CatalystLive',
     password: 'kiddollars'
 });
+
+
 
 imgur.setClientId('8ef663def73ee38');
 
@@ -61,5 +71,6 @@ var cache = (duration) => {
 app.get("/", router.sendResponse());
 app.get("/r/:sub/:sort", cache(expirationTime), router.getSubreddit(ommittedKeys));
 app.get("/submission/:submissionId", router.getSubmission());
+app.get("/frontpage/:sort", cache(expirationTime), router.getFrontPage());
 
 app.listen(PORT, _ => {});
