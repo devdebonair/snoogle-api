@@ -25,7 +25,7 @@ const reddit = new snoowrap({
     userAgent: 'nodev7.2.1:jiNIOlneh6TvXQ:1.0 (by /u/catalystlive)',
     clientId: 'MeEU261ljtCJMg',
     clientSecret: 'YQZda7J9vym-9pvT5DlpLPmxd1Y',
-    username: 'CatalystLive',
+    username: 'devdebonair',
     password: 'kiddollars'
 });
 
