@@ -12,6 +12,8 @@ const imgur = {
 const Imgur = require("../services/service.imgur");
 const Gfycat = require("../services/service.gfycat");
 
+const Cache = require("memory-cache");
+
 module.exports = class Fetcher {
 
     constructor() {
@@ -26,14 +28,34 @@ module.exports = class Fetcher {
     }
 
     fetchAllMedia(listings) {
-        let promises = [];
-        for(let listing of listings) {
-            promises.push(this.fetchMedia(listing));
-        }
-        return Promise.all(promises);
+        return new Promise((resolve, reject) => {
+            let promises = [];
+            for(let listing of listings) {
+                let cachedMedia = Cache.get(listing.url);
+                promises.push(this.fetchMedia(listing));
+            }
+            Promise.all(promises)
+            .then(posts => {
+                for(let post of posts) {
+                    if(!_.isEmpty(post.hamlet_media) || !_.isEmpty(post.hamlet_album)) {
+                        let expireTime = 1000 * 60 * 60 * 24; // 1 day
+                        Cache.put(post.url, _.pick(post, ["hamlet_media", "hamlet_album"], expireTime));
+                    }
+                }
+                resolve(posts);
+            })
+            .catch(reject);
+        });
     }
 
     fetchMedia(listing) {
+
+        let cachedMedia = Cache.get(listing.url);
+        if(!_.isEmpty(cachedMedia)) {
+            listing = _.assign(listing, cachedMedia);
+            return this.blank(listing);
+        }
+
         let linkUrl = url.parse(listing.url);
         let hostname = linkUrl.hostname;
         let regex = /[^\/]+(?=\/$|$)/g;

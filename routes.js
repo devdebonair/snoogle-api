@@ -36,7 +36,6 @@ module.exports = class Routes {
                 res.status(200).json(data);
             })
             .catch(error => {
-                console.log(error);
                 let responseData = _.pick(error, ["name", "message", "code"]);
                 res.status((error.code || 500)).json(responseData);
             });
@@ -53,7 +52,9 @@ module.exports = class Routes {
                 ommittedKeys: self.ommittedListingKeys
             };
             self.model.getListing(subreddit, sort, options)
-            .then(res.status(200).json)
+            .then(data => {
+                res.status(200).json(data);
+            })
             .catch(error => {
                 let responseData = _.pick(error, ["name", "message", "code"]);
                 res.status((error.code || 500)).json(responseData);
