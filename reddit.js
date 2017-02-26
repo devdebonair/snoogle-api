@@ -23,7 +23,6 @@ module.exports = class Reddit {
     getUser(id) {
         let self = this;
         return new Promise((resolve, reject) => {
-            console.log(id);
             self.reddit
             .getUser(id)
             .fetch()
@@ -34,6 +33,37 @@ module.exports = class Reddit {
             .catch(error => {
                 let code = snoowrapHelper.parseStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
+    getUserSubmissions(id, sort, options) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            function fetchMedia(listings) {
+                return self.fetcher.fetchAllMedia(listings.data).then(function(data){
+                    listings.data = data;
+                    return listings;
+                });
+            }
+            let supportedSorts = ["new", "hot", "rising", "top", "controversial"];
+            if(_.isEmpty(sort) || supportedSorts.indexOf(sort) === -1) {
+                return reject(self.errors.invalid.sort);
+            }
+            self.reddit
+            .getUser(id)
+            .getSubmissions()
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            })
+            .then(data => { return self.formatListing(data, options.ommittedKeys); })
+            .catch(error => { reject(self.errors.format); })
+            .then(fetchMedia)
+            .catch(reject)
+            .then(resolve)
+            .catch(error => {
+                reject(self.errors.unknown);
             });
         });
     }

@@ -38,6 +38,24 @@ module.exports = class Routes {
         };
     }
 
+    getUserSubmissions() {
+        return (req, res, next) => {
+            let id = req.params.id;
+            let sort = req.params.sort.toLowerCase();
+            let options = {
+                after: req.query.after,
+                ommittedKeys: this.ommittedListingKeys
+            };
+            this.model
+            .getUserSubmissions(id, sort, options)
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     getSubmission() {
         let options = {
             ommittedKeys: ["body_html"]
