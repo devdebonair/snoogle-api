@@ -11,5 +11,6 @@ app.get("/", router.sendResponse());
 app.get("/r/:sub/:sort", router.getSubreddit());
 app.get("/submission/:submissionId", router.getSubmission());
 app.get("/frontpage/:sort", router.getFrontPage());
+app.get("/users/:id", router.getUser());
 
 app.listen(PORT, _ => {});

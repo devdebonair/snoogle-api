@@ -25,6 +25,19 @@ module.exports = class Routes {
         };
     }
 
+    getUser() {
+        return (req, res, next) => {
+            let id = req.params.id;
+            this.model
+            .getUser(id)
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     getSubmission() {
         let options = {
             ommittedKeys: ["body_html"]

@@ -20,6 +20,24 @@ module.exports = class Reddit {
         };
     }
 
+    getUser(id) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            console.log(id);
+            self.reddit
+            .getUser(id)
+            .fetch()
+            .then(user => {
+                let data = user.toJSON();
+                resolve(data);
+            })
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
     getSubmission(submissionId, options) {
         return new Promise((resolve, reject) => {
             this.reddit
