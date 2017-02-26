@@ -1,28 +1,11 @@
 const Express = require("express");
 const mcache = require("memory-cache");
 const Routes = require("./routes");
-const Reddit = require("./services/service.reddit");
-const Imgur = require("./services/service.imgur");
-const Gfycat = require("./services/service.gfycat");
 const PORT = process.env.PORT || 3000;
 const expirationTime = 60 * 4; // 60 seconds
-const router = new Routes({
-    imgur: Imgur,
-    gfycat: Gfycat,
-    reddit: Reddit
-});
 
+const router = new Routes();
 const app = Express();
-
-const ommittedKeys = [
-    'secure_media',
-    'secure_media_embed',
-    'secure_media_embed',
-    'media',
-    'media_embed',
-    'selftext_html',
-    'preview'
-];
 
 var cache = (duration) => {
     return (req, res, next) => {
@@ -42,7 +25,7 @@ var cache = (duration) => {
 };
 
 app.get("/", router.sendResponse());
-app.get("/r/:sub/:sort", cache(expirationTime), router.getSubreddit(ommittedKeys));
+app.get("/r/:sub/:sort", cache(expirationTime), router.getSubreddit());
 app.get("/submission/:submissionId", router.getSubmission());
 app.get("/frontpage/:sort", cache(expirationTime), router.getFrontPage());
 
