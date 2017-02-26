@@ -44,7 +44,8 @@ module.exports = class Routes {
             let sort = req.params.sort.toLowerCase();
             let options = {
                 after: req.query.after,
-                ommittedKeys: this.ommittedListingKeys
+                ommittedKeys: this.ommittedListingKeys,
+                sort: sort
             };
             this.model
             .getUserSubmissions(id, sort, options)

@@ -46,13 +46,13 @@ module.exports = class Reddit {
                     return listings;
                 });
             }
-            let supportedSorts = ["new", "hot", "rising", "top", "controversial"];
+            let supportedSorts = ["new", "hot", "top", "controversial"];
             if(_.isEmpty(sort) || supportedSorts.indexOf(sort) === -1) {
                 return reject(self.errors.invalid.sort);
             }
             self.reddit
             .getUser(id)
-            .getSubmissions()
+            .getSubmissions(options)
             .catch(error => {
                 let code = snoowrapHelper.parseStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
@@ -66,6 +66,10 @@ module.exports = class Reddit {
                 reject(self.errors.unknown);
             });
         });
+    }
+
+    getUserComments(id) {
+
     }
 
     getSubmission(submissionId, options) {
