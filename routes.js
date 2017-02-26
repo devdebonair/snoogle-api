@@ -1,40 +1,7 @@
 const _ = require("lodash");
 const Fetcher = require("./fetchers");
-
-function flatten(treeObj, idAttr, parentAttr, childrenAttr, levelAttr) {
-    if (!idAttr) idAttr = 'id';
-    if (!parentAttr) parentAttr = 'parent_id';
-    if (!childrenAttr) childrenAttr = 'replies';
-    if (!levelAttr) levelAttr = 'level';
-
-    function flattenChild(childObj, parentId, level) {
-        var array = [];
-
-        var childCopy = _.extend({}, childObj);
-        childCopy[levelAttr] = level - 1;
-        childCopy[parentAttr] = parentId;
-        delete childCopy[childrenAttr];
-        array.push(childCopy);
-
-        array = array.concat(processChildren(childObj, level));
-
-        return array;
-    }
-
-    function processChildren(obj, level) {
-        if (!level) level = 0;
-        var array = [];
-        obj[childrenAttr].forEach(function(childObj) {
-            array = array.concat(flattenChild(childObj, obj[idAttr], level+1));
-        });
-
-        return array;
-    }
-
-    var result = processChildren(treeObj);
-    return result;
-}
-
+const Reddit = require("./services/service.reddit");
+const flatten = require("./helpers/helper.flatten");
 
 module.exports = class Routes {
 
@@ -55,7 +22,7 @@ module.exports = class Routes {
 
 
             let submissionId = req.params.submissionId;
-            this.services.reddit
+            Reddit
             .getSubmission(submissionId)
             .comments
             .then(comments => comments.toJSON())
@@ -77,7 +44,7 @@ module.exports = class Routes {
         return (req, res, next) => {
             let subreddit = req.params.sub.toLowerCase();
             let sort = req.params.sort.toLowerCase();
-            let sub = this.services.reddit.getSubreddit(subreddit);
+            let sub = Reddit.getSubreddit(subreddit);
             let after = req.query.after;
             let options = {after: after};
             switch (sort) {
@@ -157,7 +124,7 @@ module.exports = class Routes {
         let self = this;
         return (req, res, next) => {
             let sort = req.params.sort.toLowerCase();
-            let sub = this.services.reddit;
+            let sub = Reddit;
             let after = req.query.after;
             let options = {after: after};
             switch (sort) {
