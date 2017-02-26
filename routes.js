@@ -5,9 +5,9 @@ const flatten = require("./helpers/helper.flatten");
 
 module.exports = class Routes {
 
-    constructor(services) {
-        this.services = services;
-        this.fetcher = new Fetcher(services);
+    constructor() {
+        this.reddit = Reddit;
+        this.fetcher = new Fetcher();
     }
 
     sendResponse() {
@@ -19,10 +19,8 @@ module.exports = class Routes {
     getSubmission() {
         let self = this;
         return (req, res, next) => {
-
-
             let submissionId = req.params.submissionId;
-            Reddit
+            this.reddit
             .getSubmission(submissionId)
             .comments
             .then(comments => comments.toJSON())
@@ -44,7 +42,7 @@ module.exports = class Routes {
         return (req, res, next) => {
             let subreddit = req.params.sub.toLowerCase();
             let sort = req.params.sort.toLowerCase();
-            let sub = Reddit.getSubreddit(subreddit);
+            let sub = this.reddit.getSubreddit(subreddit);
             let after = req.query.after;
             let options = {after: after};
             switch (sort) {

@@ -1,5 +1,4 @@
 module.exports = class Reddit {
-
     constructor(services) {
 
     }
@@ -8,5 +7,4 @@ module.exports = class Reddit {
         subreddit = subreddit.toLowerCase();
         sort = sort.toLowerCase();
     }
-
 };
