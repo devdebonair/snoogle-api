@@ -9,7 +9,6 @@ module.exports = class Reddit {
     constructor() {
         this.reddit = RedditService;
         this.fetcher = new Fetcher();
-
         this.errors = {
             unknown: new RedditError("UnknownError", "An unkown error has occurred.", 404),
             format: new RedditError("FormatError", "An error occurred while formatting original reddit response."),
@@ -47,7 +46,6 @@ module.exports = class Reddit {
     getListing(subreddit, sort, options) {
         const self = this;
         return new Promise((resolve, reject) => {
-
             let sub = RedditService;
             sort = sort.toLowerCase();
 
@@ -126,7 +124,6 @@ module.exports = class Reddit {
                 post.selftext = post.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
                 return post;
             });
-
             resolve(retval);
         });
     }
