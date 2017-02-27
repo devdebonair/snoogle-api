@@ -15,5 +15,6 @@ app.get("/users/:id", router.getUser());
 app.get("/users/:id/submissions/:sort", router.getUserSubmissions());
 app.get("/users/:id/comments/:sort", router.getUserComments());
 app.post("/users/:id/friend", router.addFriend());
+app.post("/users/:id/unfriend", router.addFriend());
 
 app.listen(PORT, _ => {});

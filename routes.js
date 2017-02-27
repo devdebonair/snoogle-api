@@ -143,4 +143,20 @@ module.exports = class Routes {
             });
         };
     }
+
+    removeFriend() {
+        let self = this;
+        return (req, res, next) => {
+            let id = req.params.id;
+            self.model
+            .removeFriend(id)
+            .then(data => {
+                res.status(200).json({data: data});
+            })
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status(error.code).json(responseData);
+            });
+        };
+    }
 };

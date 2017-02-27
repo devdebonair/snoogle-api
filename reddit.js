@@ -20,13 +20,27 @@ module.exports = class Reddit {
         };
     }
 
-    // This is not working for some reason.
     addFriend(id) {
         let self = this;
         return new Promise((resolve, reject) => {
             self.reddit
             .getUser(id)
             .friend()
+            .then(data => resolve(data))
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                let message = this.errors.reddit.message;
+                reject(new RedditError(this.errors.reddit.name, message, code));
+            });
+        });
+    }
+
+    removeFriend(id) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.reddit
+            .getUser(id)
+            .unfriend()
             .then(data => resolve(data))
             .catch(error => {
                 let code = snoowrapHelper.parseStatusCode(error.message);
