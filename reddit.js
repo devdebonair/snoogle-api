@@ -67,6 +67,22 @@ module.exports = class Reddit {
         });
     }
 
+    getUserTrophies(id) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.reddit
+            .getUser(id)
+            .getTrophies()
+            .then(trophies => {
+                resolve(trophies);
+            })
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
     getUserSubmissions(id, sort, options) {
         let self = this;
         return new Promise((resolve, reject) => {
