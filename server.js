@@ -13,5 +13,7 @@ app.get("/submission/:submissionId", router.getSubmission());
 app.get("/frontpage/:sort", router.getFrontPage());
 app.get("/users/:id", router.getUser());
 app.get("/users/:id/submissions/:sort", router.getUserSubmissions());
+app.get("/users/:id/comments/:sort", router.getUserComments());
+app.post("/users/:id/friend", router.addFriend());
 
 app.listen(PORT, _ => {});

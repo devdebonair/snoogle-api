@@ -20,6 +20,22 @@ module.exports = class Reddit {
         };
     }
 
+    // This is not working for some reason.
+    addFriend(id) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.reddit
+            .getUser(id)
+            .friend()
+            .then(data => resolve(data))
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                let message = this.errors.reddit.message;
+                reject(new RedditError(this.errors.reddit.name, message, code));
+            });
+        });
+    }
+
     getUser(id) {
         let self = this;
         return new Promise((resolve, reject) => {
@@ -50,6 +66,7 @@ module.exports = class Reddit {
             if(_.isEmpty(sort) || supportedSorts.indexOf(sort) === -1) {
                 return reject(self.errors.invalid.sort);
             }
+            options.sort = sort;
             self.reddit
             .getUser(id)
             .getSubmissions(options)
@@ -68,8 +85,31 @@ module.exports = class Reddit {
         });
     }
 
-    getUserComments(id) {
-
+    getUserComments(id, sort, options) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            let supportedSorts = ["new", "hot", "top", "controversial"];
+            if(_.isEmpty(sort) || supportedSorts.indexOf(sort) === -1) {
+                return reject(self.errors.invalid.sort);
+            }
+            options.sort = sort;
+            self.reddit
+            .getUser(id)
+            .getComments(options)
+            .then(comments => {
+                return comments.toJSON();
+            })
+            .then(comments => {
+                return comments.map(comment => {
+                    return _.omit(comment, options.ommittedKeys);
+                });
+            })
+            .then(resolve)
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
     }
 
     getSubmission(submissionId, options) {

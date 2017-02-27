@@ -2,6 +2,7 @@ const _ = require("lodash");
 const Reddit = require("./services/service.reddit");
 const flatten = require("./helpers/helper.flatten");
 const RedditModel = require("./Reddit");
+const RedditError = require("./helpers/RedditError");
 
 module.exports = class Routes {
 
@@ -38,14 +39,31 @@ module.exports = class Routes {
         };
     }
 
+    getUserComments() {
+        return (req, res, next) => {
+            let id = req.params.id;
+            let sort = req.params.sort.toLowerCase();
+            let options = {
+                after: req.query.after,
+                ommittedKeys: ["body_html"]
+            };
+            this.model
+            .getUserComments(id, sort, options)
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     getUserSubmissions() {
         return (req, res, next) => {
             let id = req.params.id;
             let sort = req.params.sort.toLowerCase();
             let options = {
                 after: req.query.after,
-                ommittedKeys: this.ommittedListingKeys,
-                sort: sort
+                ommittedKeys: this.ommittedListingKeys
             };
             this.model
             .getUserSubmissions(id, sort, options)
@@ -103,6 +121,22 @@ module.exports = class Routes {
                 ommittedKeys: this.ommittedListingKeys
             };
             self.model.getListing(null, sort, options).then(res.status(200).json)
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status(error.code).json(responseData);
+            });
+        };
+    }
+
+    addFriend() {
+        let self = this;
+        return (req, res, next) => {
+            let id = req.params.id;
+            self.model
+            .addFriend(id)
+            .then(data => {
+                res.status(200).json({data: data});
+            })
             .catch(error => {
                 let responseData = _.pick(error, ["name", "message", "code"]);
                 res.status(error.code).json(responseData);
