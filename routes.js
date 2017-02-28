@@ -1,14 +1,10 @@
 const _ = require("lodash");
-const Reddit = require("./services/service.reddit");
-const flatten = require("./helpers/helper.flatten");
-const RedditModel = require("./Reddit");
-const RedditError = require("./helpers/RedditError");
+const Reddit = require("./controllers");
+const config = require("./config");
 
 module.exports = class Routes {
 
     constructor() {
-        this.reddit = Reddit;
-        this.model = new RedditModel();
         this.ommittedListingKeys = [
             'secure_media',
             'secure_media_embed',
@@ -18,6 +14,8 @@ module.exports = class Routes {
             'selftext_html',
             'preview'
         ];
+
+        this.snooOptions = config.accounts.devdebonair;
     }
 
     sendResponse() {
@@ -29,8 +27,8 @@ module.exports = class Routes {
     getUser() {
         return (req, res, next) => {
             let id = req.params.id;
-            this.model
-            .getUser(id)
+            let user = new Reddit.User(this.snooOptions);
+            user.getUser(id)
             .then(data => res.status(200).json(data))
             .catch(error => {
                 let responseData = _.pick(error, ["name", "message", "code"]);
@@ -47,8 +45,8 @@ module.exports = class Routes {
                 after: req.query.after,
                 ommittedKeys: ["body_html"]
             };
-            this.model
-            .getUserComments(id, sort, options)
+            let user = new Reddit.User(this.snooOptions);
+            user.getUserComments(id, sort, options)
             .then(data => res.status(200).json(data))
             .catch(error => {
                 let responseData = _.pick(error, ["name", "message", "code"]);
@@ -65,8 +63,8 @@ module.exports = class Routes {
                 after: req.query.after,
                 ommittedKeys: this.ommittedListingKeys
             };
-            this.model
-            .getUserSubmissions(id, sort, options)
+            let user = new Reddit.User(this.snooOptions);
+            user.getUserSubmissions(id, sort, options)
             .then(data => res.status(200).json(data))
             .catch(error => {
                 let responseData = _.pick(error, ["name", "message", "code"]);
@@ -80,8 +78,8 @@ module.exports = class Routes {
             ommittedKeys: ["body_html"]
         };
         return (req, res, next) => {
-            this.model
-            .getSubmission(req.params.submissionId, options)
+            let submission = new Reddit.Submission(this.snooOptions);
+            submission.getComments(req.params.submissionId, options)
             .then(data => {
                 res.status(200).json(data);
             })
@@ -101,7 +99,8 @@ module.exports = class Routes {
                 after: req.query.after,
                 ommittedKeys: self.ommittedListingKeys
             };
-            self.model.getListing(subreddit, sort, options)
+            let listing = new Reddit.Listing(this.snooOptions);
+            listing.fetch(subreddit, sort, options)
             .then(data => {
                 res.status(200).json(data);
             })
@@ -120,10 +119,14 @@ module.exports = class Routes {
                 after: req.query.after,
                 ommittedKeys: this.ommittedListingKeys
             };
-            self.model.getListing(null, sort, options).then(res.status(200).json)
+            let listing = new Reddit.Listing(this.snooOptions);
+            listing.fetch(null, sort, options)
+            .then(data => {
+                return res.status(200).json(data);
+            })
             .catch(error => {
                 let responseData = _.pick(error, ["name", "message", "code"]);
-                res.status(error.code).json(responseData);
+                return res.status(error.code).json(responseData);
             });
         };
     }
@@ -132,8 +135,8 @@ module.exports = class Routes {
         let self = this;
         return (req, res, next) => {
             let id = req.params.id;
-            self.model
-            .getUserTrophies(id)
+            let user = new Reddit.User(this.snooOptions);
+            user.getUserTrophies(id)
             .then(data => {
                 res.status(200).json({data: data});
             })
@@ -148,8 +151,8 @@ module.exports = class Routes {
         let self = this;
         return (req, res, next) => {
             let id = req.params.id;
-            self.model
-            .addFriend(id)
+            let user = new Reddit.User(this.snooOptions);
+            user.addFriend(id)
             .then(data => {
                 res.status(200).json({data: data});
             })
@@ -164,8 +167,8 @@ module.exports = class Routes {
         let self = this;
         return (req, res, next) => {
             let id = req.params.id;
-            self.model
-            .removeFriend(id)
+            let user = new Reddit.User(this.snooOptions);
+            user.removeFriend(id)
             .then(data => {
                 res.status(200).json({data: data});
             })
