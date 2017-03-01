@@ -99,7 +99,7 @@ module.exports = class Routes {
         };
         return (req, res, next) => {
             let submission = new Reddit.Submission(this.snooOptions);
-            submission.getComments(req.params.submissionId, options)
+            submission.getComments(req.params.id, options)
             .then(data => {
                 res.status(200).json(data);
             })
@@ -112,7 +112,7 @@ module.exports = class Routes {
 
     upvoteSubmission() {
         return (req, res, next) => {
-            let submissionId = req.params.submissionId;
+            let submissionId = req.params.id;
             new Reddit.Submission(this.snooOptions)
             .upvote(submissionId)
             .then(data => {
@@ -127,7 +127,7 @@ module.exports = class Routes {
 
     downvoteSubmission() {
         return (req, res, next) => {
-            let submissionId = req.params.submissionId;
+            let submissionId = req.params.id;
             new Reddit.Submission(this.snooOptions)
             .downvote(submissionId)
             .then(data => {
@@ -142,7 +142,7 @@ module.exports = class Routes {
 
     saveSubmission() {
         return (req, res, next) => {
-            let submissionId = req.params.submissionId;
+            let submissionId = req.params.id;
             new Reddit.Submission(this.snooOptions)
             .save(submissionId)
             .then(data => {
@@ -157,7 +157,7 @@ module.exports = class Routes {
 
     unsaveSubmission() {
         return (req, res, next) => {
-            let submissionId = req.params.submissionId;
+            let submissionId = req.params.id;
             new Reddit.Submission(this.snooOptions)
             .unsave(submissionId)
             .then(data => {
@@ -172,7 +172,7 @@ module.exports = class Routes {
 
     unvoteSubmission() {
         return (req, res, next) => {
-            let submissionId = req.params.submissionId;
+            let submissionId = req.params.id;
             new Reddit.Submission(this.snooOptions)
             .unvote(submissionId)
             .then(data => {
@@ -188,14 +188,15 @@ module.exports = class Routes {
     getListing() {
         let self = this;
         return (req, res, next) => {
-            let subreddit = req.params.sub.toLowerCase();
+            let subreddit = req.params.name.toLowerCase();
             let sort = req.params.sort.toLowerCase();
             let options = {
                 after: req.query.after,
-                ommittedKeys: self.ommittedListingKeys
+                ommittedKeys: self.ommittedListingKeys,
+                sort: sort
             };
             let listing = new Reddit.Listing(this.snooOptions);
-            listing.fetch(subreddit, sort, options)
+            listing.fetch(subreddit, options)
             .then(data => {
                 res.status(200).json(data);
             })
