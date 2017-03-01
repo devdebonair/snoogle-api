@@ -90,6 +90,81 @@ module.exports = class Routes {
         };
     }
 
+    upvoteSubmission() {
+        return (req, res, next) => {
+            let submissionId = req.params.submissionId;
+            new Reddit.Submission(this.snooOptions)
+            .upvote(submissionId)
+            .then(data => {
+                return res.status(200).json({data: data});
+            })
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
+    downvoteSubmission() {
+        return (req, res, next) => {
+            let submissionId = req.params.submissionId;
+            new Reddit.Submission(this.snooOptions)
+            .downvote(submissionId)
+            .then(data => {
+                return res.status(200).json({data: data});
+            })
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
+    saveSubmission() {
+        return (req, res, next) => {
+            let submissionId = req.params.submissionId;
+            new Reddit.Submission(this.snooOptions)
+            .save(submissionId)
+            .then(data => {
+                return res.status(200).json({data: data});
+            })
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
+    unsaveSubmission() {
+        return (req, res, next) => {
+            let submissionId = req.params.submissionId;
+            new Reddit.Submission(this.snooOptions)
+            .unsave(submissionId)
+            .then(data => {
+                return res.status(200).json({data: data});
+            })
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
+    unvoteSubmission() {
+        return (req, res, next) => {
+            let submissionId = req.params.submissionId;
+            new Reddit.Submission(this.snooOptions)
+            .unvote(submissionId)
+            .then(data => {
+                return res.status(200).json({data: data});
+            })
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     getSubreddit() {
         let self = this;
         return (req, res, next) => {

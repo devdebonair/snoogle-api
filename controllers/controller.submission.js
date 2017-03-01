@@ -33,4 +33,69 @@ module.exports = class Submission extends RedditController {
         });
     }
 
+    upvote(submissionId) {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getSubmission(submissionId)
+            .upvote()
+            .then(resolve)
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
+    downvote(submissionId) {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getSubmission(submissionId)
+            .downvote()
+            .then(resolve)
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
+    save(submissionId) {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getSubmission(submissionId)
+            .save()
+            .then(resolve)
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
+    unsave(submissionId) {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getSubmission(submissionId)
+            .unsave()
+            .then(resolve)
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
+    unvote(submissionId) {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getSubmission(submissionId)
+            .unvote()
+            .then(resolve)
+            .catch(error => {
+                let code = snoowrapHelper.parseStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
 };
