@@ -6,7 +6,7 @@ const router = new Routes();
 const app = Express();
 
 app.get("/", router.sendResponse());
-app.get("/r/:sub/:sort", router.getSubreddit());
+app.get("/r/:sub/:sort", router.getListing());
 app.get("/submission/:submissionId", router.getSubmission());
 app.post("/submission/:submissionId/upvote", router.upvoteSubmission());
 app.post("/submission/:submissionId/downvote", router.downvoteSubmission());
@@ -20,5 +20,6 @@ app.get("/users/:id/comments/:sort", router.getUserComments());
 app.post("/users/:id/friend", router.addFriend());
 app.post("/users/:id/unfriend", router.addFriend());
 app.get("/users/:id/trophies", router.getUserTrophies());
+app.get("/subreddit/:name", router.getSubreddit());
 
 app.listen(PORT, _ => {});

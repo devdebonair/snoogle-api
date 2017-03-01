@@ -12,7 +12,7 @@ module.exports = class Submission extends RedditController {
             this.snoo
             .getSubmission(submissionId).comments
             .catch(error => {
-                let code = snoowrapHelper.parseStatusCode(error.message);
+                let code = this.parseSnooStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             })
             .then(comments => comments.toJSON())
@@ -40,7 +40,7 @@ module.exports = class Submission extends RedditController {
             .upvote()
             .then(resolve)
             .catch(error => {
-                let code = snoowrapHelper.parseStatusCode(error.message);
+                let code = this.parseSnooStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             });
         });
@@ -53,7 +53,7 @@ module.exports = class Submission extends RedditController {
             .downvote()
             .then(resolve)
             .catch(error => {
-                let code = snoowrapHelper.parseStatusCode(error.message);
+                let code = this.parseSnooStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             });
         });
@@ -66,7 +66,7 @@ module.exports = class Submission extends RedditController {
             .save()
             .then(resolve)
             .catch(error => {
-                let code = snoowrapHelper.parseStatusCode(error.message);
+                let code = this.parseSnooStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             });
         });
@@ -79,7 +79,7 @@ module.exports = class Submission extends RedditController {
             .unsave()
             .then(resolve)
             .catch(error => {
-                let code = snoowrapHelper.parseStatusCode(error.message);
+                let code = this.parseSnooStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             });
         });
@@ -92,7 +92,7 @@ module.exports = class Submission extends RedditController {
             .unvote()
             .then(resolve)
             .catch(error => {
-                let code = snoowrapHelper.parseStatusCode(error.message);
+                let code = this.parseSnooStatusCode(error.message);
                 reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             });
         });

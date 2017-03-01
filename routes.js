@@ -24,6 +24,26 @@ module.exports = class Routes {
         };
     }
 
+    getSubreddit() {
+        return (req, res, next) => {
+            let subreddit = req.params.name;
+            let options = {
+                ommittedKeys: [
+                    "submit_text_html",
+                    "description_html",
+                    "public_description_html"
+                ]
+            };
+            new Reddit.Subreddit(this.snooOptions)
+            .fetch("rocketleague", options)
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     getUser() {
         return (req, res, next) => {
             let id = req.params.id;
@@ -165,7 +185,7 @@ module.exports = class Routes {
         };
     }
 
-    getSubreddit() {
+    getListing() {
         let self = this;
         return (req, res, next) => {
             let subreddit = req.params.sub.toLowerCase();
