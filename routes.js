@@ -44,6 +44,32 @@ module.exports = class Routes {
         };
     }
 
+    subscribeSubreddit() {
+        return (req, res, next) => {
+            let subreddit = req.params.name;
+            new Reddit.Subreddit(this.snooOptions)
+            .subscribe("rocketleague")
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
+    unsubscribeSubreddit() {
+        return (req, res, next) => {
+            let subreddit = req.params.name;
+            new Reddit.Subreddit(this.snooOptions)
+            .unsubscribe("rocketleague")
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     getUser() {
         return (req, res, next) => {
             let id = req.params.id;
