@@ -12,14 +12,21 @@ module.exports = class RedditController {
         this._ = lodash;
         this.formatListing = helperListing.format;
         this.parseSnooStatusCode = snoowrapHelper.parseStatusCode;
+        this.RedditError = RedditError;
         this.errors = {
-            unknown: new RedditError("UnknownError", "An unkown error has occurred.", 404),
-            format: new RedditError("FormatError", "An error occurred while formatting original reddit response."),
-            reddit: new RedditError("RedditError", "An error occurred with Reddit servers.", 500),
-            media: new RedditError("MediaError", "Error fetching media content."),
+            unknown: new this.RedditError("UnknownError", "An unkown error has occurred.", 404),
+            format: new this.RedditError("FormatError", "An error occurred while formatting original reddit response."),
+            reddit: new this.RedditError("RedditError", "An error occurred with Reddit servers.", 500),
+            media: new this.RedditError("MediaError", "Error fetching media content."),
             invalid: {
-                sort: new RedditError("InvalidSort", "Sort is not supported.")
+                sort: new this.RedditError("InvalidSort", "Sort is not supported.")
             }
+        };
+        this.parseSnooError = (error, reject) => {
+            let type = "RedditError";
+            let code = this.parseSnooStatusCode(error.message);
+            let message = error.message;
+            return reject(new this.RedditError(type, message, code));
         };
     }
 };

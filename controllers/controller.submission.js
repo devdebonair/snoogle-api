@@ -2,7 +2,6 @@ const flatten = require("../helpers/helper.flatten");
 const RedditController = require("./controller.reddit");
 
 module.exports = class Submission extends RedditController {
-
     constructor(options) {
         super(options);
     }
@@ -13,7 +12,7 @@ module.exports = class Submission extends RedditController {
             .getSubmission(submissionId).comments
             .catch(error => {
                 let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+                reject(new this.RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             })
             .then(comments => comments.toJSON())
             .then(comments => {
@@ -29,7 +28,7 @@ module.exports = class Submission extends RedditController {
                 });
             })
             .then(resolve)
-            .catch(reject);
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -39,10 +38,7 @@ module.exports = class Submission extends RedditController {
             .getSubmission(submissionId)
             .upvote()
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -52,10 +48,7 @@ module.exports = class Submission extends RedditController {
             .getSubmission(submissionId)
             .downvote()
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -65,10 +58,7 @@ module.exports = class Submission extends RedditController {
             .getSubmission(submissionId)
             .save()
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -78,10 +68,7 @@ module.exports = class Submission extends RedditController {
             .getSubmission(submissionId)
             .unsave()
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -91,11 +78,7 @@ module.exports = class Submission extends RedditController {
             .getSubmission(submissionId)
             .unvote()
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
-
 };

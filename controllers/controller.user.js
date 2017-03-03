@@ -1,6 +1,5 @@
 const flatten = require("../helpers/helper.flatten");
 const RedditController = require("./controller.reddit");
-const RedditError = require("../helpers/RedditError");
 
 module.exports = class User extends RedditController {
     constructor(options) {
@@ -14,11 +13,7 @@ module.exports = class User extends RedditController {
             .getUser(id)
             .friend()
             .then(data => resolve(data))
-            .catch(error => {
-                let code = self.parseSnooStatusCode(error.message);
-                let message = this.errors.reddit.message;
-                reject(new RedditError(this.errors.reddit.name, message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -29,11 +24,7 @@ module.exports = class User extends RedditController {
             .getUser(id)
             .unfriend()
             .then(data => resolve(data))
-            .catch(error => {
-                let code = self.parseSnooStatusCode(error.message);
-                let message = this.errors.reddit.message;
-                reject(new RedditError(this.errors.reddit.name, message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -47,10 +38,7 @@ module.exports = class User extends RedditController {
                 let data = user.toJSON();
                 resolve(data);
             })
-            .catch(error => {
-                let code = self.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -63,10 +51,7 @@ module.exports = class User extends RedditController {
             .then(trophies => {
                 resolve(trophies);
             })
-            .catch(error => {
-                let code = self.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -89,16 +74,14 @@ module.exports = class User extends RedditController {
             .getSubmissions(options)
             .catch(error => {
                 let code = self.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+                reject(new this.RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             })
             .then(data => { return self.formatListing(data, options.ommittedKeys); })
             .catch(error => { reject(self.errors.format); })
             .then(fetchMedia)
             .catch(reject)
             .then(resolve)
-            .catch(error => {
-                reject(self.errors.unknown);
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -122,10 +105,7 @@ module.exports = class User extends RedditController {
                 });
             })
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
@@ -134,10 +114,7 @@ module.exports = class User extends RedditController {
             this.snoo
             .getMyMultireddits()
             .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 };

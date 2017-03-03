@@ -55,9 +55,7 @@ module.exports = class ListingController extends RedditController {
             .then(fetchMedia)
             .catch(reject)
             .then(resolve)
-            .catch(error => {
-                reject(self.errors.unknown);
-            });
+            .catch(error => this.parseSnooError(error, reject));
         });
     }
 
