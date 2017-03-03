@@ -53,15 +53,23 @@ module.exports = class MultiReddit extends RedditController {
             if(this._.isEmpty(options.name) || this._.isEmpty(options.edits)) {
                 return reject(new RedditError("InvalidArguments", "Must provide name and edits."));
             }
+            let promises = [];
             this._getMyMultireddit(options.name)
-            .then(multi => multi.edit(options.edits))
+            .then(multi => {
+                if(!this._.isEmpty(options.edits.title)) {
+                    const titleNoSpace = options.edits.title.replace(/\s/g,'');
+                    promises.push(multi.rename({newName: titleNoSpace}));
+                }
+                promises.push(multi.edit(options.edits));
+                return Promise.all(promises);
+            })
             .then(resolve)
             .catch(reject);
         });
     }
 
     create() {
-        
+
     }
 
     delete() {
