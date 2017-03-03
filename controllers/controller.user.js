@@ -140,19 +140,4 @@ module.exports = class User extends RedditController {
             });
         });
     }
-
-    createMultireddit(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name) || this._.isEmpty(options.description) || this._.isEmpty(options.subreddits)) {
-                return reject(new RedditError("InvalidArguments", "Must provide name, description, and list of subreddits"));
-            }
-            this.snoo
-            .createMultireddit(options)
-            .then(resolve)
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            });
-        });
-    }
 };
