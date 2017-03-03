@@ -52,4 +52,40 @@ module.exports = class Subreddit extends RedditController {
         });
     }
 
+    submitLink(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.title) || this._.isEmpty(options.url) || this._.isEmpty(options.subreddit)) {
+                return reject(new RedditError("InvalidArguments", "Must provide title, url, and subreddit", 500));
+            }
+            const defaults = {subreddit: "", title: "", url: "", sendReplies: true};
+            options = this._.assign(defaults, options);
+            this.snoo
+            .getSubreddit(options.subreddit)
+            .submitLink(options)
+            .then(resolve)
+            .catch(error => {
+                let code = this.parseSnooStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
+    submitText(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.title) || this._.isEmpty(options.text) || this._.isEmpty(options.subreddit)) {
+                return reject(new RedditError("InvalidArguments", "Must provide title, text, and subreddit", 500));
+            }
+            const defaults = {subreddit: "", title: "", text: "", sendReplies: true};
+            options = this._.assign(defaults, options);
+            this.snoo
+            .getSubreddit(options.subreddit)
+            .submitSelfpost(options)
+            .then(resolve)
+            .catch(error => {
+                let code = this.parseSnooStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
+
 };

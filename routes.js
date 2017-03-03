@@ -44,6 +44,40 @@ module.exports = class Routes {
         };
     }
 
+    submitText() {
+        return (req, res, next) => {
+            let options = {
+                subreddit: req.params.name,
+                title: req.body.title,
+                text: req.body.text
+            };
+            new Reddit.Subreddit(this.snooOptions)
+            .submitText(options)
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
+    submitLink() {
+        return (req, res, next) => {
+            let options = {
+                subreddit: req.params.name,
+                title: req.body.title,
+                url: req.body.url
+            };
+            new Reddit.Subreddit(this.snooOptions)
+            .submitLink(options)
+            .then(data => res.status(200).json(data))
+            .catch(error => {
+                let responseData = _.pick(error, ["name", "message", "code"]);
+                res.status((error.code || 500)).json(responseData);
+            });
+        };
+    }
+
     subscribeSubreddit() {
         return (req, res, next) => {
             let subreddit = req.params.name;

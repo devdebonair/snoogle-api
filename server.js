@@ -1,9 +1,15 @@
 const Express = require("express");
+const MethodOverride = require("method-override");
+const BodyParser = require("body-parser");
 const Routes = require("./routes");
 const PORT = process.env.PORT || 3000;
 
 const router = new Routes();
 const app = Express();
+
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({extended: true}));
+app.use(MethodOverride());
 
 app.get("/", router.sendResponse());
 
@@ -12,6 +18,8 @@ app.get("/subreddit/:name", router.getSubreddit());
 app.get("/subreddit/:name/listing/:sort", router.getListing());
 app.post("/subreddit/:name/subscribe", router.subscribeSubreddit());
 app.post("/subreddit/:name/unsubscribe", router.unsubscribeSubreddit());
+app.post("/subreddit/:name/submit/text", router.submitText());
+app.post("/subreddit/:name/submit/link", router.submitLink());
 
 app.get("/submission/:id", router.getSubmission());
 app.post("/submission/:id/upvote", router.upvoteSubmission());
