@@ -24,7 +24,7 @@ module.exports = class MultiReddit extends RedditController {
         });
     }
 
-    addSubreddit(options) {
+    addSubreddit(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
                 return reject(new RedditError("InvalidArguments", "Must provide name and subreddit."));
@@ -36,7 +36,7 @@ module.exports = class MultiReddit extends RedditController {
         });
     }
 
-    removeSubreddit(options) {
+    removeSubreddit(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
                 return reject(new RedditError("InvalidArguments", "Must provide name and subreddit."));
@@ -78,13 +78,21 @@ module.exports = class MultiReddit extends RedditController {
             .then(resolve)
             .catch(error => {
                 let code = this.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+                return reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
             });
         });
     }
 
-    delete() {
-
+    delete(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.name)) {
+                return reject(new RedditError("InvalidArguments", "Must provide name and subreddit."));
+            }
+            this._getMyMultireddit(options.name)
+            .then(multi => multi.delete())
+            .then(_ => resolve({sucess: true}))
+            .catch(reject);
+        });
     }
 
     copy(options = {}) {
