@@ -36,8 +36,16 @@ module.exports = class MultiReddit extends RedditController {
         });
     }
 
-    removeSubreddit() {
-
+    removeSubreddit(options) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
+                reject(new RedditError("InvalidArguments", "Must provide name and subreddit."));
+            }
+            this._getMyMultireddit(options.name)
+            .then(multi => multi.removeSubreddit(options.subreddit))
+            .then(resolve)
+            .catch(reject);
+        });
     }
 
     edit() {
