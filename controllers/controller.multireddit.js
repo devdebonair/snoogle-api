@@ -76,7 +76,17 @@ module.exports = class MultiReddit extends RedditController {
 
     }
 
-    copy() {
-
+    copy(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.user) || this._.isEmpty(options.user_multiname) || this._.isEmpty(options.new_multiname)) {
+                return reject(new RedditError("InvalidArguments", "Must provide user, multireddit name, and new multireddit name."));
+            }
+            this.snoo
+            .getUser(options.user)
+            .getMultireddit(options.user_multiname)
+            .copy({newName: options.new_multiname})
+            .then(resolve)
+            .catch(reject);
+        });
     }
 };
