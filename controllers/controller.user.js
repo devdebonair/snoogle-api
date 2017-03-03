@@ -128,4 +128,16 @@ module.exports = class User extends RedditController {
             });
         });
     }
+
+    getMultireddits() {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getMyMultireddits()
+            .then(resolve)
+            .catch(error => {
+                let code = self.parseSnooStatusCode(error.message);
+                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
+            });
+        });
+    }
 };
