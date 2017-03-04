@@ -100,4 +100,30 @@ module.exports = class Submission extends RedditController {
             .catch(error => this.parseSnooError(error, reject));
         });
     }
+
+    edit(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide submission id and text to update.", 500));
+            }
+            this.snoo
+            .getSubmission(options.id)
+            .edit(options.text)
+            .then(resolve)
+            .catch(error => this.parseSnooError(error, reject));
+        });
+    }
+
+    delete(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
+            this.snoo
+            .getSubmission(options.id)
+            .delete()
+            .then(resolve)
+            .catch(error => this.parseSnooError(error, reject));
+        });
+    }
 };

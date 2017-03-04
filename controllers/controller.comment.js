@@ -99,7 +99,7 @@ module.exports = class Comment extends RedditController {
     edit(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide comment id and text to send.", 500));
+                return reject(new this.RedditError("InvalidArguments", "Must provide comment id and text to update.", 500));
             }
             this.snoo
             .getComment(options.id)
