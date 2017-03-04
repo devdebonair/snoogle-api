@@ -23,7 +23,8 @@ let getOptions = () => {
         comments: {
             reply: { id: submissionId, text: "This is testing the submission reply." },
             get: { id: submissionId }
-        }
+        },
+        edit: { id: submissionId, text: "This text has been edited." }
     };
 };
 
@@ -40,7 +41,7 @@ describe("Submissions", () => {
         });
 
         it("should fetch", () => {
-            return submission.getComments(getOptions().comments.get).should.eventually.have.length.above(0);
+            return submission.getComments(getOptions().comments.get).should.eventually.be.an("Array");
         });
     });
 
@@ -78,19 +79,15 @@ describe("Submissions", () => {
         });
     });
 
-    after(() => {
-        return subreddit.getListing(getOptions().after)
-        .then(listing => {
-            return listing.data.map((submission) => {
-                return submission.id;
-            });
-        })
-        .then(submissionIds => {
-            let promises = [];
-            for(let id of submissionIds) {
-                promises.push(submission.delete({id: id}));
-            }
-            return Promise.all(promises);
+    describe("Edit", () => {
+        it("should change text", () => {
+            return submission.edit(getOptions().edit).should.eventually.have.property("json");
+        });
+    });
+
+    describe("Delete", () => {
+        it("should delete", () => {
+            return submission.delete(getOptions().submission).should.eventually.have.property("name");
         });
     });
 });
