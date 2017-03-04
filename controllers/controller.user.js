@@ -122,4 +122,63 @@ module.exports = class User extends RedditController {
             .catch(error => this.parseSnooError(error, reject));
         });
     }
+
+    _getInbox(options = {}) {
+        return new Promise((resolve, reject) => {
+            let defaults = { filter: null };
+            options = this._.assign(defaults, options);
+            this.snoo
+            .getInbox(options)
+            .then(resolve)
+            .catch(error => this.parseSnooError(error, reject));
+        });
+    }
+
+    getUnreadNotifications() {
+        return new Promise((resolve, reject) => {
+            this._getInbox({ filter: "unread" })
+            .then(resolve)
+            .catch(reject);
+        });
+    }
+
+    getNotifications() {
+        return new Promise((resolve, reject) => {
+            this._getInbox()
+            .then(resolve)
+            .catch(reject);
+        });
+    }
+
+    getPrivateMessages() {
+        return new Promise((resolve, reject) => {
+            this._getInbox({ filter: "messages" })
+            .then(resolve)
+            .catch(reject);
+        });
+    }
+
+    getCommentReplies() {
+        return new Promise((resolve, reject) => {
+            this._getInbox({ filter: "comments" })
+            .then(resolve)
+            .catch(reject);
+        });
+    }
+
+    getSumissionReplies() {
+        return new Promise((resolve, reject) => {
+            this._getInbox({ filter: "selfreply" })
+            .then(resolve)
+            .catch(reject);
+        });
+    }
+
+    getMentions() {
+        return new Promise((resolve, reject) => {
+            this._getInbox({ filter: "mentions" })
+            .then(resolve)
+            .catch(reject);
+        });
+    }
 };
