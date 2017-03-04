@@ -34,7 +34,7 @@ module.exports = class ListingController extends RedditController {
                 case "controversial":
                 sub = sub.getControversial(options); break;
                 default:
-                return reject(self.errors.invalid.sort);
+                return reject(this.errors.invalid.sort);
             }
 
             function fetchMedia(listings) {
