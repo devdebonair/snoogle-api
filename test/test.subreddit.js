@@ -23,7 +23,7 @@ const options = {
     listing: { subreddit: subredditTestName, after: null, sort: "hot" }
 };
 
-describe('Subreddit', () => {
+describe('Subreddits', () => {
 
     after(() => {
         return subreddit.getListing(options.testSubreddit)
