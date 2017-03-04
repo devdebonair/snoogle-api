@@ -19,7 +19,8 @@ const options = {
     },
     subscription: {
         subreddit: { subreddit: "rocketleague" }
-    }
+    },
+    listing: { subreddit: subredditTestName, after: null, sort: "hot" }
 };
 
 describe('Subreddit', () => {
@@ -63,6 +64,12 @@ describe('Subreddit', () => {
     describe("Fetch", () => {
         it("should fetch subreddit information", () => {
             return subreddit.fetch(options.testSubreddit).should.eventually.have.property("id");
+        });
+    });
+
+    describe("Listing", () => {
+        it("should fetch listing", () => {
+            return subreddit.getListing(options.listing).should.eventually.have.property("data");
         });
     });
 });
