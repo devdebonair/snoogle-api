@@ -9,30 +9,26 @@ module.exports = class ListingController extends RedditController {
         const self = this;
         const defaults = {
             omit: [],
+            subreddit: null,
             after: null,
             sort: "hot"
         };
         options = this._.assign(defaults, options);
         return new Promise((resolve, reject) => {
-            let sub = this.snoo;
+            let subreddit = this.snoo;
             let sort = options.sort.toLowerCase();
-
-            if(!this._.isEmpty(options.subreddit)) {
-                subreddit = subreddit.toLowerCase();
-                sub = sub.getSubreddit(subreddit);
-            }
 
             switch (sort) {
                 case "new":
-                sub = sub.getNew(options); break;
+                subreddit = subreddit.getNew(options.subreddit, options); break;
                 case "hot":
-                sub = sub.getHot(options); break;
+                subreddit = subreddit.getHot(options.subreddit, options); break;
                 case "rising":
-                sub = sub.getRising(options); break;
+                subreddit = subreddit.getRising(options.subreddit, options); break;
                 case "top":
-                sub = sub.getTop(options); break;
+                subreddit = subreddit.getTop(options.subreddit, options); break;
                 case "controversial":
-                sub = sub.getControversial(options); break;
+                subreddit = subreddit.getControversial(options.subreddit, options); break;
                 default:
                 return reject(this.errors.invalid.sort);
             }
@@ -44,11 +40,9 @@ module.exports = class ListingController extends RedditController {
                 });
             }
 
-            sub
+            subreddit
             .then(data => { return this.formatListing(data, options.omit); })
-            .catch(error => { return reject(this.errors.format); })
             .then(fetchMedia)
-            .catch(reject)
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
