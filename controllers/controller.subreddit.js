@@ -6,36 +6,39 @@ module.exports = class Subreddit extends RedditController {
         super(options);
     }
 
-    fetch(subreddit, options) {
-        let defaults = {
-            ommittedKeys: []
-        };
-        options = this._.assign(defaults, options);
+    fetch(options = {}) {
+        if(this._.isEmpty(options.subreddit)) {
+            return reject(new this.RedditError("InvalidArguments", "Must provide subreddit."));
+        }
         return new Promise((resolve, reject) => {
             this.snoo
-            .getSubreddit(subreddit)
+            .getSubreddit(options.subreddit)
             .fetch()
-            .then(data => data.toJSON())
-            .then(data => this._.omit(data, options.ommittedKeys))
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    subscribe(subreddit) {
+    subscribe(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.subreddit)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide subreddit."));
+            }
             this.snoo
-            .getSubreddit(subreddit)
+            .getSubreddit(options.subreddit)
             .subscribe()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    unsubscribe(subreddit) {
+    unsubscribe(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.subreddit)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide subreddit."));
+            }
             this.snoo
-            .getSubreddit(subreddit)
+            .getSubreddit(options.subreddit)
             .unsubscribe()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));

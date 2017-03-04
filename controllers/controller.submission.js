@@ -6,76 +6,82 @@ module.exports = class Submission extends RedditController {
         super(options);
     }
 
-    getComments(submissionId, options) {
+    getComments(options) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
             this.snoo
-            .getSubmission(submissionId).comments
-            .catch(error => {
-                let code = this.parseSnooStatusCode(error.message);
-                reject(new this.RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            })
+            .getSubmission(options.id).comments
             .then(comments => comments.toJSON())
             .then(comments => {
                 return { replies: comments };
             })
             .then(flatten)
-            .then(comments => {
-                if(this._.isEmpty(options.ommittedKeys)) {
-                    return comments;
-                }
-                return comments.map(comment => {
-                    return this._.omit(comment, options.ommittedKeys);
-                });
-            })
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    upvote(submissionId) {
+    upvote(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
             this.snoo
-            .getSubmission(submissionId)
+            .getSubmission(options.id)
             .upvote()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    downvote(submissionId) {
+    downvote(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
             this.snoo
-            .getSubmission(submissionId)
+            .getSubmission(options.id)
             .downvote()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    save(submissionId) {
+    save(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
             this.snoo
-            .getSubmission(submissionId)
+            .getSubmission(options.id)
             .save()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    unsave(submissionId) {
+    unsave(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
             this.snoo
-            .getSubmission(submissionId)
+            .getSubmission(options.id)
             .unsave()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    unvote(submissionId) {
+    unvote(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
             this.snoo
-            .getSubmission(submissionId)
+            .getSubmission(options.id)
             .unvote()
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));

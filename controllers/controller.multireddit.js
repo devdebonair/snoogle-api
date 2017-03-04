@@ -5,8 +5,11 @@ module.exports = class MultiReddit extends RedditController {
         super(options);
     }
 
-    _getMyMultireddit(name) {
+    _getMyMultireddit(options = {}) {
         return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.name)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide name."));
+            }
             this.snoo
             .getMyMultireddits()
             .then(multireddits => {

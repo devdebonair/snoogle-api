@@ -1,15 +1,14 @@
 const RedditController = require("./controller.reddit");
 
 module.exports = class ListingController extends RedditController {
-
     constructor(options) {
         super(options);
     }
 
-    fetch(subreddit, options) {
+    fetch(options = {}) {
         const self = this;
         const defaults = {
-            ommittedKeys: [],
+            omit: [],
             after: null,
             sort: "hot"
         };
@@ -18,7 +17,7 @@ module.exports = class ListingController extends RedditController {
             let sub = this.snoo;
             let sort = options.sort.toLowerCase();
 
-            if(!this._.isEmpty(subreddit)) {
+            if(!this._.isEmpty(options.subreddit)) {
                 subreddit = subreddit.toLowerCase();
                 sub = sub.getSubreddit(subreddit);
             }
@@ -46,17 +45,12 @@ module.exports = class ListingController extends RedditController {
             }
 
             sub
-            .catch(error => {
-                let code = self.parseSnooStatusCode(error.message);
-                reject(new RedditError(this.errors.reddit.name, this.errors.reddit.message, code));
-            })
-            .then(data => { return this.formatListing(data, options.ommittedKeys); })
-            .catch(error => { return reject(self.errors.format); })
+            .then(data => { return this.formatListing(data, options.omit); })
+            .catch(error => { return reject(this.errors.format); })
             .then(fetchMedia)
             .catch(reject)
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
     }
-
 };
