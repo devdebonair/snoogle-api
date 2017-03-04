@@ -1,4 +1,3 @@
-const flatten = require("../helpers/helper.flatten");
 const RedditController = require("./controller.reddit");
 
 module.exports = class User extends RedditController {
