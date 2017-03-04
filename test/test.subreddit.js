@@ -12,7 +12,7 @@ const should = chai.should();
 
 const subredditTestName = "snoogle";
 const options = {
-    clean: { subreddit: subredditTestName },
+    testSubreddit: { subreddit: subredditTestName },
     submit: {
         text: { title: "This is a post", text: "This is post content.", subreddit: subredditTestName },
         link: { title: "This is a post", url: "https://www.youtube.com/", subreddit: subredditTestName }
@@ -25,7 +25,7 @@ const options = {
 describe('Subreddit', () => {
 
     after(() => {
-        return subreddit.getListing(options.clean)
+        return subreddit.getListing(options.testSubreddit)
         .then(listing => {
             return listing.data.map((submission) => {
                 return submission.id;
@@ -57,6 +57,12 @@ describe('Subreddit', () => {
 
         it("should unsubscribe", () => {
             return subreddit.unsubscribe(options.subscription.subreddit).should.eventually.have.property("display_name");
+        });
+    });
+
+    describe("Fetch", () => {
+        it("should fetch subreddit information", () => {
+            return subreddit.fetch(options.testSubreddit).should.eventually.have.property("id");
         });
     });
 });
