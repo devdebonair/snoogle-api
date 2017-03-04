@@ -43,4 +43,17 @@ module.exports = class PrivateMessage extends RedditController {
             .catch(error => this.parseSnooError(error, reject));
         });
     }
+
+    reply(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id of private message and text to send."));
+            }
+            this.snoo
+            .getMessage(options.id)
+            .reply(options.text)
+            .then(resolve)
+            .catch(error => this.parseSnooError(error, reject));
+        });
+    }
 };
