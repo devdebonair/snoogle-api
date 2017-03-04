@@ -48,7 +48,7 @@ module.exports = class User extends RedditController {
         });
     }
 
-    getUserTrophies(options = {}) {
+    getTrophies(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.name)) {
                 return reject(new this.RedditError("InvalidArguments", "Must provide name of user.", 500));
@@ -61,7 +61,7 @@ module.exports = class User extends RedditController {
         });
     }
 
-    getUserSubmissions(options = {}) {
+    getSubmissions(options = {}) {
         return new Promise((resolve, reject) => {
             let self = this;
             function fetchMedia(listings) {
@@ -89,7 +89,7 @@ module.exports = class User extends RedditController {
         });
     }
 
-    getUserComments(options = {}) {
+    getComments(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.name) || this._.isEmpty(sort)) {
                 return reject("InvalidArguments", "Must provide name and valid sort.");
