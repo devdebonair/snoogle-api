@@ -68,6 +68,16 @@ describe("Submissions", () => {
         });
     });
 
+    describe("Visibility", () => {
+        it("should hide", () => {
+            return submission.hide(getOptions().submission).should.eventually.have.property("name");
+        });
+
+        it("should unhide", () => {
+            return submission.unhide(getOptions().submission).should.eventually.have.property("name");
+        });
+    });
+
     after(() => {
         return subreddit.getListing(getOptions().after)
         .then(listing => {
