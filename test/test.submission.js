@@ -17,7 +17,7 @@ let submissionId = "";
 
 let getOptions = () => {
     return {
-        after: { id: submissionId },
+        after: { id: subredditTestName },
         before: { subreddit: subredditTestName, title: "This is an example.", text: "This is a test" },
         comments: {
             reply: { id: submissionId, text: "This is testing the submission reply." },
@@ -44,6 +44,18 @@ describe("Submissions", () => {
     });
 
     after(() => {
-        return submission.delete(getOptions().after);
+        return subreddit.getListing(getOptions().after)
+        .then(listing => {
+            return listing.data.map((submission) => {
+                return submission.id;
+            });
+        })
+        .then(submissionIds => {
+            let promises = [];
+            for(let id of submissionIds) {
+                promises.push(submission.delete({id: id}));
+            }
+            return Promise.all(promises);
+        });
     });
 });
