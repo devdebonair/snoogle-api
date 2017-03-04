@@ -17,6 +17,7 @@ let submissionId = "";
 
 let getOptions = () => {
     return {
+        submission: { id: submissionId },
         after: { id: subredditTestName },
         before: { subreddit: subredditTestName, title: "This is an example.", text: "This is a test" },
         comments: {
@@ -40,6 +41,30 @@ describe("Submissions", () => {
 
         it("should fetch", () => {
             return submission.getComments(getOptions().comments.get).should.eventually.have.length.above(0);
+        });
+    });
+
+    describe("Votes", () => {
+        it("should upvote", () => {
+            return submission.upvote(getOptions().submission).should.eventually.have.property("name");
+        });
+
+        it("should downvote", () => {
+            return submission.downvote(getOptions().submission).should.eventually.have.property("name");
+        });
+
+        it("should unvote", () => {
+            return submission.unvote(getOptions().submission).should.eventually.have.property("name");
+        });
+    });
+
+    describe("Saves", () => {
+        it("should save", () => {
+            return submission.save(getOptions().submission).should.eventually.have.property("name");
+        });
+
+        it("should unsave", () => {
+            return submission.unsave(getOptions().submission).should.eventually.have.property("name");
         });
     });
 
