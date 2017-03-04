@@ -181,4 +181,13 @@ module.exports = class User extends RedditController {
             .catch(reject);
         });
     }
+
+    getSentMessages() {
+        return new Promise((resolve, reject) => {
+            this.snoo
+            .getSentMessages()
+            .then(resolve)
+            .catch(error => this.parseSnooError(error, reject));
+        });
+    }
 };
