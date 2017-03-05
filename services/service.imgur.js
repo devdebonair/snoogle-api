@@ -1,4 +1,5 @@
 const imgur = require('imgur');
-imgur.setClientId('8ef663def73ee38');
+const clientId = require("../config").imgur.clientId;
+imgur.setClientId(clientId);
 
 module.exports = imgur;
