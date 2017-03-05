@@ -26,12 +26,12 @@ module.exports = class User extends RedditController {
             this.snoo
             .getUser(options.name)
             .unfriend()
-            .then(resolve)
+            .then(_ => resolve({success: true}))
             .catch(error => this.parseSnooError(error, reject));
         });
     }
 
-    getUser(options = {}) {
+    fetch(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.name)) {
                 return reject(new this.RedditError("InvalidArguments", "Must provide name of user.", 500));
@@ -64,25 +64,22 @@ module.exports = class User extends RedditController {
         return new Promise((resolve, reject) => {
             let self = this;
             function fetchMedia(listings) {
-                return self.fetcher.fetchAllMedia(listings.data).then(function(data){
+                return self.fetcher.fetchAllMedia(listings.data).then((data) => {
                     listings.data = data;
                     return listings;
                 });
             }
-            if(this._.isEmpty(options.name) || this._.isEmpty(sort)) {
-                return reject("InvalidArguments", "Must provide name and valid sort.");
+            if(this._.isEmpty(options.name)) {
+                return reject("InvalidArguments", "Must provide name.");
             }
             let supportedSorts = ["new", "hot", "top", "controversial"];
-            if(supportedSorts.indexOf(sort) === -1) {
-                return reject(this.errors.invalid.sort);
-            }
+            let defaults = { name: "", sort: "hot"};
+            options = this._.assign(defaults, options);
             this.snoo
             .getUser(options.name)
             .getSubmissions(options)
             .then(data => this.formatListing(data, options.ommittedKeys))
-            .catch(error => reject(this.errors.format))
             .then(fetchMedia)
-            .catch(reject)
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
@@ -90,13 +87,12 @@ module.exports = class User extends RedditController {
 
     getComments(options = {}) {
         return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name) || this._.isEmpty(sort)) {
-                return reject("InvalidArguments", "Must provide name and valid sort.");
+            if(this._.isEmpty(options.name)) {
+                return reject("InvalidArguments", "Must provide name.");
             }
             let supportedSorts = ["new", "hot", "top", "controversial"];
-            if(supportedSorts.indexOf(sort) === -1) {
-                return reject(this.errors.invalid.sort);
-            }
+            let defaults = { name: "", sort: "hot"};
+            options = this._.assign(defaults, options);
             this.snoo
             .getUser(options.name)
             .getComments(options)
@@ -166,7 +162,7 @@ module.exports = class User extends RedditController {
         });
     }
 
-    getSumissionReplies() {
+    getSubmissionReplies() {
         return new Promise((resolve, reject) => {
             this._getInbox({ filter: "selfreply" })
             .then(resolve)
