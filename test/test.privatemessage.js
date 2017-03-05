@@ -14,7 +14,7 @@ const should = chai.should();
 
 let getOptions = () => {
     return {
-        compose: { to: "snoogletest", subject: "Test", text: "This is a test."},
+        compose: { to: account.username, subject: "Test", text: "This is a test."},
         reply: { id: "", text: "Testing replying feature." }
     };
 };
@@ -40,7 +40,8 @@ describe("Comments", () => {
 
     describe("Compose", () => {
         it("should compose", () => {
-            return pm.compose(getOptions().compose).should.eventually.have.property("success");
+            return pm.compose(getOptions().compose)
+            .should.eventually.have.property("success");
         });
     });
 
