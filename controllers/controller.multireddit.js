@@ -14,12 +14,11 @@ module.exports = class MultiReddit extends RedditController {
             .getMyMultireddits()
             .then(multireddits => {
                 for(let multireddit of multireddits) {
-                    if(multireddit.display_name === name) {
+                    if(multireddit.display_name === options.name) {
                         return resolve(multireddit);
-                    } else {
-                        return reject(new this.RedditError("NotFound", `Could not find ${name} in multireddits.`, 404));
                     }
                 }
+                return reject(new this.RedditError("NotFound", `Could not find ${options.name} in multireddits.`, 404));
             })
             .then(data => resolve(data))
             .catch(error => this.parseSnooError(error, reject));
@@ -31,7 +30,7 @@ module.exports = class MultiReddit extends RedditController {
             if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
                 return reject(new this.RedditError("InvalidArguments", "Must provide name and subreddit."));
             }
-            this._getMyMultireddit(options.name)
+            this._getMyMultireddit({name: options.name})
             .then(multi => multi.addSubreddit(options.subreddit))
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
@@ -43,7 +42,7 @@ module.exports = class MultiReddit extends RedditController {
             if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
                 return reject(new this.RedditError("InvalidArguments", "Must provide name and subreddit."));
             }
-            this._getMyMultireddit(options.name)
+            this._getMyMultireddit({name: options.name})
             .then(multi => multi.removeSubreddit(options.subreddit))
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
@@ -56,7 +55,7 @@ module.exports = class MultiReddit extends RedditController {
                 return reject(new this.RedditError("InvalidArguments", "Must provide name and edits."));
             }
             let promises = [];
-            this._getMyMultireddit(options.name)
+            this._getMyMultireddit({name: options.name})
             .then(multi => {
                 if(!this._.isEmpty(options.edits.title)) {
                     const titleNoSpace = options.edits.title.replace(/\s/g,'');
@@ -85,11 +84,11 @@ module.exports = class MultiReddit extends RedditController {
     delete(options = {}) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name and subreddit."));
+                return reject(new this.RedditError("InvalidArguments", "Must provide name."));
             }
-            this._getMyMultireddit(options.name)
+            this._getMyMultireddit({name: options.name})
             .then(multi => multi.delete())
-            .then(_ => resolve({sucess: true}))
+            .then(_ => resolve({success: true}))
             .catch(error => this.parseSnooError(error, reject));
         });
     }
