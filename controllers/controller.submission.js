@@ -6,6 +6,19 @@ module.exports = class Submission extends RedditController {
         super(options);
     }
 
+    fetch(options = {}) {
+        return new Promise((resolve, reject) => {
+            if(this._.isEmpty(options.id)) {
+                return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
+            }
+            this.snoo
+            .getSubmission(options.id)
+            .fetch()
+            .then(resolve)
+            .catch(error => this.parseSnooError(error, reject));
+        });
+    }
+
     getComments(options) {
         return new Promise((resolve, reject) => {
             if(this._.isEmpty(options.id)) {

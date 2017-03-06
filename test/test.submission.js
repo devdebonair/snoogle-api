@@ -38,6 +38,13 @@ describe("Submissions", () => {
         });
     });
 
+    describe("Fetch", () => {
+        it("should fetch", () => {
+            return submission.fetch(getOptions().submission)
+            .should.eventually.have.property("name");
+        });
+    });
+
     describe("Comments", () => {
         it("should reply", () => {
             return submission.reply(getOptions().comments.reply)
