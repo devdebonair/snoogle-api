@@ -160,7 +160,8 @@ module.exports = (router) => {
             const options = {id: req.params.id, text: req.body.text};
             submission.edit(options)
             .then(data => {
-                return res.status(200).json(data);
+                return res.status(200)
+                .json({data: data.json.data.things, errors: data.json.errors});
             })
             .catch(error => {
                 return res.status(error.code)
