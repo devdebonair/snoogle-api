@@ -3,10 +3,10 @@ const account = config.accounts.test;
 const testSubreddit = config.test.subreddit;
 
 const Multireddit = require("../controllers").Multireddit;
-const User = require("../controllers").User;
+const Me = require("../controllers").Me;
 
 const multireddit = new Multireddit(account);
-const user = new User(account);
+const me = new Me(account);
 
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
@@ -44,7 +44,6 @@ let getOptions = () => {
 };
 
 describe("Multireddits", () => {
-
     before(() => {
         return Promise.all([
             multireddit.create(getOptions().before.remove),
@@ -95,7 +94,7 @@ describe("Multireddits", () => {
     });
 
     after(() => {
-        return user.getMultireddits()
+        return me.getMultireddits()
         .then(multireddits => {
             return multireddits.map((multi) => {
                 return multi.name;

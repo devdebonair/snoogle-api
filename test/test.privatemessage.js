@@ -1,9 +1,9 @@
 const account = require("../config").accounts.test;
 const PrivateMessage = require("../controllers").PrivateMessage;
-const User = require("../controllers").User;
+const Me = require("../controllers").Me;
 
 const pm = new PrivateMessage(account);
-const user = new User(account);
+const me = new Me(account);
 
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
@@ -31,7 +31,7 @@ describe("Comments", () => {
 
     describe("Fetch", () => {
         it("should fetch", () => {
-            return user.getPrivateMessages().then(messages => {
+            return me.getPrivateMessages().then(messages => {
                 return pm.fetch({id: messages[0].id});
             })
             .should.eventually.have.property("name");
@@ -47,7 +47,7 @@ describe("Comments", () => {
 
     describe("Reply", () => {
         it("should reply", () => {
-            return user.getPrivateMessages().then(messages => {
+            return me.getPrivateMessages().then(messages => {
                 let options = getOptions().reply;
                 options.id = messages[0].id;
                 return pm.reply(options);
@@ -58,7 +58,7 @@ describe("Comments", () => {
 
     describe("Delete", () => {
         it("should delete", () => {
-            return user.getPrivateMessages().then(messages => {
+            return me.getPrivateMessages().then(messages => {
                 return pm.delete({id: messages[0].id});
             })
             .should.eventually.have.property("success");
@@ -66,7 +66,7 @@ describe("Comments", () => {
     });
 
     after(() => {
-        return user.getPrivateMessages()
+        return me.getPrivateMessages()
         .then(messages => {
             return messages.map((message) => {
                 return message.id;
