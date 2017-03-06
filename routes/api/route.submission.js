@@ -2,7 +2,7 @@ const Submission = require("../../controllers").Submission;
 const account = require("../../config").accounts.test;
 
 module.exports = (router) => {
-    router.route("/submission/:id")
+    router.route("/submissions/:id")
         .get((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -28,7 +28,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/comments")
+    router.route("/submissions/:id/comments")
         .get((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -42,7 +42,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/upvote")
+    router.route("/submissions/:id/upvote")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -56,7 +56,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/downvote")
+    router.route("/submissions/:id/downvote")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -70,7 +70,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/save")
+    router.route("/submissions/:id/save")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -84,7 +84,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/hide")
+    router.route("/submissions/:id/hide")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -98,7 +98,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/unsave")
+    router.route("/submissions/:id/unsave")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -112,7 +112,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/unvote")
+    router.route("/submissions/:id/unvote")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -126,7 +126,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/unhide")
+    router.route("/submissions/:id/unhide")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -140,7 +140,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/reply")
+    router.route("/submissions/:id/reply")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id, text: req.body.text};
@@ -154,7 +154,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submission/:id/edit")
+    router.route("/submissions/:id/edit")
         .post((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id, text: req.body.text};
