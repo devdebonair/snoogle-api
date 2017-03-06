@@ -70,7 +70,7 @@ module.exports = class Me extends RedditController {
         });
     }
 
-    getUnreadNotifications() {
+    getUnreadInbox() {
         return new Promise((resolve, reject) => {
             this._getInbox({ filter: "unread" })
             .then(resolve)
@@ -78,7 +78,7 @@ module.exports = class Me extends RedditController {
         });
     }
 
-    getNotifications() {
+    getInbox() {
         return new Promise((resolve, reject) => {
             this._getInbox()
             .then(resolve)

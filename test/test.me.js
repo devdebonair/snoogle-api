@@ -18,7 +18,8 @@ let getOptions = () => {
 describe("Me", () => {
     describe("Fetch", () => {
         it("should fetch", () => {
-            return me.fetch().should.eventually.have.property("name");
+            return me.fetch()
+            .should.eventually.have.property("name");
         });
     });
 
@@ -58,8 +59,13 @@ describe("Me", () => {
     });
 
     describe("Inbox", () => {
+        it("should fetch", () => {
+            return me.getInbox()
+            .should.eventually.be.an("Array");
+        });
+
         it("should fetch unread", () => {
-            return me.getNotifications()
+            return me.getUnreadInbox()
             .should.eventually.be.an("Array");
         });
 
