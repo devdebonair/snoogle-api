@@ -15,6 +15,19 @@ module.exports = (router) => {
                 .json({type: error.name, message: error.message, code: error.code});
             });
         })
+        .put((req, res) => {
+            const submission = new Submission(account);
+            const options = {id: req.params.id, text: req.body.text};
+            submission.edit(options)
+            .then(data => {
+                return res.status(200)
+                .json({data: data.json.data.things, errors: data.json.errors});
+            })
+            .catch(error => {
+                return res.status(error.code)
+                .json({type: error.name, message: error.message, code: error.code});
+            });
+        })
         .delete((req, res) => {
             const submission = new Submission(account);
             const options = {id: req.params.id};
@@ -147,21 +160,6 @@ module.exports = (router) => {
             submission.reply(options)
             .then(data => {
                 return res.status(200).json(data);
-            })
-            .catch(error => {
-                return res.status(error.code)
-                .json({type: error.name, message: error.message, code: error.code});
-            });
-        });
-
-    router.route("/submissions/:id/edit")
-        .post((req, res) => {
-            const submission = new Submission(account);
-            const options = {id: req.params.id, text: req.body.text};
-            submission.edit(options)
-            .then(data => {
-                return res.status(200)
-                .json({data: data.json.data.things, errors: data.json.errors});
             })
             .catch(error => {
                 return res.status(error.code)

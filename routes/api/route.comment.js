@@ -15,6 +15,19 @@ module.exports = (router) => {
                 .json({type: error.name, message: error.message, code: error.code});
             });
         })
+        .put((req, res) => {
+            const comment = new Comment(account);
+            const options = {id: req.params.id, text: req.body.text};
+            comment.edit(options)
+            .then(data => {
+                return res.status(200)
+                .json({data: data.json.data.things, errors: data.json.errors});
+            })
+            .catch(error => {
+                return res.status(error.code)
+                .json({type: error.name, message: error.message, code: error.code});
+            });
+        })
         .delete((req, res) => {
             const comment = new Comment(account);
             const options = {id: req.params.id};
@@ -105,21 +118,6 @@ module.exports = (router) => {
             comment.reply(options)
             .then(data => {
                 return res.status(200).json(data);
-            })
-            .catch(error => {
-                return res.status(error.code)
-                .json({type: error.name, message: error.message, code: error.code});
-            });
-        });
-
-    router.route("/comments/:id/edit")
-        .post((req, res) => {
-            const comment = new Comment(account);
-            const options = {id: req.params.id, text: req.body.text};
-            comment.edit(options)
-            .then(data => {
-                return res.status(200)
-                .json({data: data.json.data.things, errors: data.json.errors});
             })
             .catch(error => {
                 return res.status(error.code)
