@@ -77,12 +77,7 @@ module.exports = class Subreddit extends RedditController {
 
     getListing(options = {}) {
         const self = this;
-        const defaults = {
-            omit: [],
-            subreddit: null,
-            after: null,
-            sort: "hot"
-        };
+        const defaults = { subreddit: null, after: null, sort: "hot", limit: 25 };
         options = this._.assign(defaults, options);
         return new Promise((resolve, reject) => {
             let subreddit = this.snoo;
@@ -117,5 +112,4 @@ module.exports = class Subreddit extends RedditController {
             .catch(error => this.parseSnooError(error, reject));
         });
     }
-
 };
