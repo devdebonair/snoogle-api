@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-exports.format = (listing, ommittedKeys) => {
+exports.format = (listing) => {
     return new Promise((resolve, reject) => {
         // Add application specific details and nest listings
         let retval = {};
@@ -19,11 +19,6 @@ exports.format = (listing, ommittedKeys) => {
             post.hamlet_album = [];
             post.hamlet_errors = [];
             return post;
-        });
-
-        // Remove specified keys
-        retval.data = retval.data.map(post => {
-            return _.omit(post, ommittedKeys);
         });
 
         // Remove multiple newline characters
