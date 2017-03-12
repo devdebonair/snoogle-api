@@ -1,4 +1,6 @@
 const RedditController = require("./controller.reddit");
+const paginate = require("../helpers/helper.paginate");
+const Cache = require("../cache").shared;
 
 module.exports = class Subreddit extends RedditController {
 
@@ -75,7 +77,7 @@ module.exports = class Subreddit extends RedditController {
         });
     }
 
-    getListing(options = {}) {
+    _getListing(options = {}) {
         const self = this;
         const defaults = { subreddit: null, after: null, sort: "hot", limit: 25 };
         options = this._.assign(defaults, options);
@@ -111,5 +113,28 @@ module.exports = class Subreddit extends RedditController {
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
+    }
+
+    getListing(options = {}) {
+        Cache.getJSONHMap()
+        return this._getListing(options);
+    }
+
+    _cacheListing(options = {}) {
+        this.gitListing(options)
+        .then(listing => {
+                if(!pageSize) {
+                    return listing;
+                }
+                const pages = paginate({posts: listing.data, capacity: 25});
+                const pagesWithFormat = pages.map((listingData, index, origin) => {
+                    let formatting = {};
+                    formatting.data = listingData;
+                    formatting.isFinished = index == origin.length - 1;
+                    formatting.after = formatting.isFinished ? null : formatting.data[formatting.data.length - 1].name;
+                    return formatting;
+                });
+                return pagesWithFormat;
+            })
     }
 };

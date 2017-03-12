@@ -1,5 +1,8 @@
 const Subreddit = require("../../controllers").Subreddit;
 const account = require("../../config").accounts.test;
+const Cache = require("../../cache").shared;
+const _ = require("lodash");
+const paginate = require("../../helpers/helper.listing").paginate;
 
 module.exports = (router) => {
 
@@ -32,8 +35,36 @@ module.exports = (router) => {
     router.route("/subreddit/:name/listing/:sort")
         .get((req, res) => {
             const subreddit = new Subreddit(account);
-            let options = {subreddit: req.params.name, sort: req.params.sort, after: req.body.after};
-            subreddit.getListing(options)
+            const after = req.query.after || "null";
+            let options = {subreddit: req.params.name, sort: req.params.sort, after: after};
+            Cache.getJSON({key: `${options.subreddit}:${options.sort}:${after}`})
+            .then((result) => {
+                if(!_.isEmpty(result)) {
+                    return result;
+                }
+                const listingToCacheOptions = _.assign(options, {limit: 500});
+                return subreddit.getListing(listingToCacheOptions);
+            })
+            .then(listing => {
+                const pages = paginate(listing.data);
+                const pagesWithFormat = pages.map((listingData, index, origin) => {
+                    let formatting = {};
+                    formatting.data = listingData;
+                    formatting.isFinished = index == origin.length - 1;
+                    formatting.after = formatting.isFinished ? null : formatting.data[formatting.data.length - 1].name;
+                    return formatting;
+                });
+                return lisitng;
+            })
+            .then(data => {
+                let cacheOptions = {
+                    key: `${options.subreddit}:${options.sort}:${after}`,
+                    value: data,
+                    exp: 60 * 12
+                };
+                Cache.storeJSON(cacheOptions);
+                return data;
+            })
             .then(data => {
                 return res.status(200).json(data);
             })
