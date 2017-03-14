@@ -12,7 +12,7 @@ const imgur = {
 const Imgur = require("../services/service.imgur");
 const Gfycat = require("../services/service.gfycat");
 
-const Cache = require("../cache").shared;
+const Cache = require("../cache");
 
 module.exports = class Fetcher {
 
@@ -43,7 +43,7 @@ module.exports = class Fetcher {
                             value: _.pick(post, ["hamlet_media", "hamlet_album"]),
                             exp: expireTime
                         };
-                        Cache.storeJSON(options).then().catch(reject);
+                        Cache.shared().storeJSON(options).then().catch(reject);
                     }
                 }
                 resolve(posts);
@@ -54,7 +54,7 @@ module.exports = class Fetcher {
 
     fetchMedia(listing) {
 
-        return Cache.getJSON({key: listing.url}).then((cache) => {
+        return Cache.shared().getJSON({key: listing.url}).then((cache) => {
             if(!_.isEmpty(cache)) {
                 listing = _.assign(listing, cache);
                 return this.blank(listing);

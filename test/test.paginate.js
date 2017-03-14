@@ -16,7 +16,6 @@ const options = {items: items, pageSize: 2};
 describe("Paginate", () => {
 	it("should create pages", (done) => {
 		let paginatedItems = paginate(options);
-		console.log(paginatedItems.length);
 		paginatedItems.should.eql(itemsToMatch);
 		done();
 	});

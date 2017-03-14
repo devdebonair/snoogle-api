@@ -1,12 +1,11 @@
+const Redis = require("ioredis");
 const options = require("../config").redis.local;
 const Cache = require("./cache");
 
-const cache = (() => {
-    return new Cache(options);
+const redis = (() => {
+	return new Redis(options);
 })();
 
-exports.shared = cache;
-
-exports.create = (options) => {
-    return new Cache(options);
+exports.shared = () => {
+	return new Cache(redis);
 };
