@@ -16,10 +16,10 @@ chai.use(chaiAsPromised);
 const should = chai.should();
 
 let getOptions = () => {
-    let multiToRemoveSub = { name: "multi_to_remove_subs", description: "This is an before test.", subreddits: [testSubreddit] };
-    let multiToAddSub = { name: "multi_to_add_subs", description: "This is an before test.", subreddits: [testSubreddit] };
-    let multiToDelete = { name: "multi_to_delete", description: "This is an before test.", subreddits: [testSubreddit] };
-    let multiToEdit = { name: "multi_to_edit", description: "This is an before test.", subreddits: [testSubreddit] };
+    let multiToRemoveSub = { name: "multi_to_remove_subs", description: "This is a before test.", subreddits: [testSubreddit] };
+    let multiToAddSub = { name: "multi_to_add_subs", description: "This is a before test.", subreddits: [testSubreddit] };
+    let multiToDelete = { name: "multi_to_delete", description: "This is a before test.", subreddits: [testSubreddit] };
+    let multiToEdit = { name: "multi_to_edit_stuff", description: "This is a before test.", subreddits: [testSubreddit] };
     return {
         delete: { name: multiToDelete.name },
         add: { name: multiToAddSub.name, subreddit: "rocketleague" },
@@ -44,15 +44,6 @@ let getOptions = () => {
 };
 
 describe("Multireddits", () => {
-    before(() => {
-        return Promise.all([
-            multireddit.create(getOptions().before.remove),
-            multireddit.create(getOptions().before.add),
-            multireddit.create(getOptions().before.delete),
-            multireddit.create(getOptions().before.edit)
-        ]);
-    });
-
     describe("Create", () => {
         it("should create", () => {
             return multireddit.create(getOptions().create)
@@ -68,6 +59,9 @@ describe("Multireddits", () => {
     });
 
     describe("Delete", () => {
+        before(() => {
+            return multireddit.create(getOptions().before.delete);
+        });
         it("should delete", () => {
             return multireddit.delete(getOptions().delete)
             .should.eventually.have.property("success");
@@ -75,6 +69,9 @@ describe("Multireddits", () => {
     });
 
     describe("Edit", () => {
+        before(() => {
+            return multireddit.create(getOptions().before.edit);
+        });
         it("should edit", () => {
             return multireddit.edit(getOptions().edit)
             .should.eventually.be.an("Array");
@@ -82,6 +79,12 @@ describe("Multireddits", () => {
     });
 
     describe("Subreddits", () => {
+        before(() => {
+            return multireddit.create(getOptions().before.add);
+        });
+        before(() => {
+            return multireddit.create(getOptions().before.remove);
+        });
         it("should add", () => {
             return multireddit.addSubreddit(getOptions().add)
             .should.eventually.have.property("name");

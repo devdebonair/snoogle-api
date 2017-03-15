@@ -89,10 +89,9 @@ module.exports = class Subreddit extends RedditController {
         const self = this;
         const defaults = { subreddit: null, after: null, sort: "hot", limit: 25 };
         options = this._.assign(defaults, options);
-        options.sort = options.sort || defaults.sort;
+        const sort = options.sort || "hot";
         return new Promise((resolve, reject) => {
             let subreddit = this.snoo;
-            let sort = options.sort.toLowerCase();
 
             switch (sort) {
                 case "new":

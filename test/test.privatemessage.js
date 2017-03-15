@@ -19,7 +19,7 @@ let getOptions = () => {
     };
 };
 
-describe("Comments", () => {
+describe("Private Messages", () => {
 
     before(() => {
         return Promise.all([
