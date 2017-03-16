@@ -1,5 +1,5 @@
 const Redis = require("ioredis");
-const options = require("../config").redis.local;
+const options = require("../config").redis;
 const Cache = require("./cache");
 
 const redis = (() => {

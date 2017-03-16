@@ -1,5 +1,5 @@
 const Multireddit = require("../../controllers").Multireddit;
-const account = require("../../config").accounts.test;
+const account = require("../../config").reddit;
 const _ = require("lodash");
 
 module.exports = (router) => {

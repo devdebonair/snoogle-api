@@ -1,5 +1,5 @@
 const Subreddit = require("../../controllers").Subreddit;
-const account = require("../../config").accounts.test;
+const account = require("../../config").reddit;
 const Cache = require("../../cache").shared;
 const _ = require("lodash");
 const paginate = require("../../helpers/helper.listing").paginate;

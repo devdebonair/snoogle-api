@@ -1,5 +1,5 @@
 const Comment = require("../../controllers").Comment;
-const account = require("../../config").accounts.test;
+const account = require("../../config").reddit;
 
 module.exports = (router) => {
     router.route("/comments/:id")

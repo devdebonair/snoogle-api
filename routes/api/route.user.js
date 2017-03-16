@@ -1,5 +1,5 @@
 const User = require("../../controllers").User;
-const account = require("../../config").accounts.test;
+const account = require("../../config").reddit;
 
 module.exports = (router) => {
     router.route("/users/:name")

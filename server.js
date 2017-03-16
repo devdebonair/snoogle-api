@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV === "dev") {
+	require("dotenv").config();
+}
+
 const Express = require("express");
 const MethodOverride = require("method-override");
 const BodyParser = require("body-parser");

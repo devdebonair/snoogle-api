@@ -1,5 +1,5 @@
 const PrivateMessage = require("../../controllers").PrivateMessage;
-const account = require("../../config").accounts.test;
+const account = require("../../config").reddit;
 
 module.exports = (router) => {
     router.route("/message")

@@ -1,4 +1,4 @@
-const account = require("../config").accounts.test;
+const account = require("../config").reddit;
 const User = require("../controllers").User;
 
 const user = new User(account);

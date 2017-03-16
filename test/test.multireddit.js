@@ -1,5 +1,5 @@
 const config = require("../config");
-const account = config.accounts.test;
+const account = config.reddit;
 const testSubreddit = config.test.subreddit;
 
 const Multireddit = require("../controllers").Multireddit;

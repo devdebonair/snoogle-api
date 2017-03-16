@@ -1,5 +1,5 @@
 const Me = require("../../controllers").Me;
-const account = require("../../config").accounts.test;
+const account = require("../../config").reddit;
 
 module.exports = (router) => {
     router.route("/me")
