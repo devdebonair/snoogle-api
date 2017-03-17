@@ -1,9 +1,5 @@
 FROM node:7.7.3
 
-# Add our user and group first to make sure their IDs get assigned consistently
-RUN groupadd -r node && useradd -m -r -g node node
-USER node
-
 dockerd --userns-remap=default
 
 # Create app directory
