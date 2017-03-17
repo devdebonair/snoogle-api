@@ -139,7 +139,7 @@ module.exports = class Subreddit extends RedditController {
 
             function cacheAndFetch(listing) {
                 if(this._.isEmpty(listing)) {
-                    this._cachePages({subreddit: options.subreddit, sort: options.sort}).then(console.log).catch(console.log);
+                    this._cachePages({subreddit: options.subreddit, sort: options.sort}).then().catch(console.log);
                     return this._getListing(options);
                 }
                 return listing;
