@@ -1,7 +1,5 @@
 FROM node:7.7.3
 
-dockerd --userns-remap=default
-
 # Create app directory
 RUN mkdir -p /src/app/
 WORKDIR /src/app
