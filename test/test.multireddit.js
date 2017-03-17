@@ -1,5 +1,6 @@
+require("dotenv").config();
 const config = require("../config");
-const account = config.reddit;
+const account = config.test.reddit;
 const testSubreddit = config.test.subreddit;
 
 const Multireddit = require("../controllers").Multireddit;
@@ -19,7 +20,7 @@ let getOptions = () => {
     let multiToRemoveSub = { name: "multi_to_remove_subs", description: "This is a before test.", subreddits: [testSubreddit] };
     let multiToAddSub = { name: "multi_to_add_subs", description: "This is a before test.", subreddits: [testSubreddit] };
     let multiToDelete = { name: "multi_to_delete", description: "This is a before test.", subreddits: [testSubreddit] };
-    let multiToEdit = { name: "multi_to_edit_stuff", description: "This is a before test.", subreddits: [testSubreddit] };
+    let multiToEdit = { name: "multi_to_edit_name", description: "This is a before test.", subreddits: [testSubreddit] };
     return {
         delete: { name: multiToDelete.name },
         add: { name: multiToAddSub.name, subreddit: "rocketleague" },

@@ -1,4 +1,5 @@
-const account = require("../config").reddit;
+require("dotenv").config();
+const account = require("../config").test.reddit;
 const User = require("../controllers").User;
 
 const user = new User(account);

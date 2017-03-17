@@ -1,5 +1,6 @@
+require("dotenv").config();
 const config = require("../config");
-const account = config.reddit;
+const account = config.test.reddit;
 const testSubreddit = config.test.subreddit;
 
 const Submission = require("../controllers").Submission;

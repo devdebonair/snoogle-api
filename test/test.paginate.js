@@ -1,3 +1,4 @@
+require("dotenv").config();
 const paginate = require("../helpers/helper.array").paginate;
 const chai = require("chai");
 const should = chai.should();

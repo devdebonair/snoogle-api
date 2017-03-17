@@ -14,7 +14,14 @@ module.exports = {
         clientSecret: process.env.GFYCAT_CLIENT_SECRET
     },
     test: {
-        subreddit: process.env.DEV_TEST_SUBREDDIT
+        subreddit: process.env.DEV_TEST_SUBREDDIT,
+        reddit: {
+            userAgent: process.env.REDDIT_TEST_USER_AGENT,
+            clientId: process.env.REDDIT_TEST_CLIENT_ID,
+            clientSecret: process.env.REDDIT_TEST_CLIENT_SECRET,
+            username: process.env.REDDIT_TEST_USERNAME,
+            password: process.env.REDDIT_TEST_PASSWORD
+        }
     },
     redis: {
         port: process.env.REDIS_PORT,

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const flatten = require("../helpers/helper.flatten");
 const chai = require("chai");
 const should = chai.should();
