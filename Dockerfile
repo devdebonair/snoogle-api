@@ -1,4 +1,7 @@
-FROM node:latest
+FROM node:7.7.3
+
+# Add our user and group first to make sure their IDs get assigned consistently
+RUN addgroup -S node && adduser -S -g node node
 
 # Create app directory
 RUN mkdir -p /usr/src/app/
