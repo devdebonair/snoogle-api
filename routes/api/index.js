@@ -7,5 +7,5 @@ module.exports = function(app) {
         if(file === 'index.js') { return; }
         require(`./${file}`)(router);
     });
-    app.use('/api/v1/', router);
+    app.use('/v1/', router);
 };

@@ -16,4 +16,7 @@ app.use(MethodOverride());
 
 routes.connect(app);
 
+// For health checks
+app.get("/", (req, res) => { res.status(200).end() });
+
 app.listen(PORT, _ => {});
