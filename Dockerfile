@@ -1,17 +1,20 @@
 FROM node:7.7.3
 
 # Add our user and group first to make sure their IDs get assigned consistently
-RUN addgroup -S node && adduser -S -g node node
+RUN groupadd -r node && useradd -m -r -g node node
+USER node
+
+dockerd --userns-remap=default
 
 # Create app directory
-RUN mkdir -p /usr/src/app/
-WORKDIR /usr/src/app
+RUN mkdir -p /src/app/
+WORKDIR /src/app
 
 # Install app dependencies
-COPY package.json /usr/src/app/
-RUN npm install
+COPY package.json /src/app/
+RUN npm install --production
 
-COPY . /usr/src/app
+COPY . /src/app
 
 EXPOSE 3000
 
