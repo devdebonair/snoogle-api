@@ -14,6 +14,10 @@ module.exports = class Submission extends RedditController {
             this.snoo
             .getSubmission(options.id)
             .fetch()
+            .then((post) => {
+                post.comments = flatten({replies: post.comments.toJSON()});
+                return post;
+            })
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });
