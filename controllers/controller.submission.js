@@ -8,9 +8,16 @@ module.exports = class Submission extends RedditController {
 
     fetch(options = {}) {
         return new Promise((resolve, reject) => {
+            const self = this;
             if(this._.isEmpty(options.id)) {
                 return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
             }
+
+            function fetchMedia(post) {
+                return self.fetcher
+                .fetchMedia(post);
+            }
+            
             this.snoo
             .getSubmission(options.id)
             .fetch()
@@ -18,6 +25,7 @@ module.exports = class Submission extends RedditController {
                 post.comments = flatten({replies: post.comments.toJSON()});
                 return post;
             })
+            .then(fetchMedia)
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));
         });

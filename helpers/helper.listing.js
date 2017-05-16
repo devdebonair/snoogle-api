@@ -13,20 +13,24 @@ exports.format = (listing) => {
         // convert snoowrap class to JSON
         retval.data = listing.toJSON();
 
-        // add hamlet media
+        // format each post
         retval.data.map(post => {
-            post.hamlet_media = {};
-            post.hamlet_album = [];
-            post.hamlet_errors = [];
-            return post;
-        });
-
-        // Remove multiple newline characters
-        retval.data = retval.data.map(post => {
-            post.selftext = post.selftext.replace(/(\n)+/g, "\n");
-            post.selftext = post.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
-            return post;
+            console.log(post);
+            return this.formatPost(post);
         });
         resolve(retval);
     });
+};
+
+// TODO: Add Test
+exports.formatPost = (post) => {
+    // add hamlet media
+    post.hamlet_media = {};
+    post.hamlet_album = [];
+    post.hamlet_errors = [];
+
+    // Remove multiple newline characters
+    post.selftext = post.selftext.replace(/(\n)+/g, "\n");
+    post.selftext = post.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
+    return post;
 };
