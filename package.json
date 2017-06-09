@@ -22,7 +22,11 @@
     "method-override": "^2.3.7",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
-    "snoowrap": "^1.11.3"
+    "snoowrap": "^1.11.3",
+    "mdast-util-definitions": "^1.2.0",
+    "mdast-util-to-string": "^1.0.2",
+    "remark": "^7.0.1",
+    "remark-squeeze-paragraphs": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

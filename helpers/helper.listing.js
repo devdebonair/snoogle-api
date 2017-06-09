@@ -1,4 +1,7 @@
 const _ = require("lodash");
+const remark = require("remark");
+const remarkSqueeze = require("remark-squeeze-paragraphs");
+const markdownParser = require("../markdown");
 
 exports.format = (listing) => {
     return new Promise((resolve, reject) => {
@@ -32,5 +35,7 @@ exports.formatPost = (post) => {
     // Remove multiple newline characters
     post.selftext = post.selftext.replace(/(\n)+/g, "\n");
     post.selftext = post.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
+    post.selftext_parsed = markdownParser(remark().use(remarkSqueeze).parse(post.selftext));
+    
     return post;
 };

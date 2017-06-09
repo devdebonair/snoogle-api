@@ -1,5 +1,6 @@
 const flatten = require("../helpers/helper.flatten");
 const RedditController = require("./controller.reddit");
+const formatPost = require("../helpers/helper.listing").formatPost;
 
 module.exports = class Submission extends RedditController {
     constructor(options) {
@@ -25,6 +26,7 @@ module.exports = class Submission extends RedditController {
                 post.comments = flatten({replies: post.comments.toJSON()});
                 return post;
             })
+            .then(formatPost)
             .then(fetchMedia)
             .then(resolve)
             .catch(error => this.parseSnooError(error, reject));

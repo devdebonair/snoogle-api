@@ -1,6 +1,7 @@
 const RedditController = require("./controller.reddit");
 const paginate = require("../helpers/helper.array").paginate;
 const Cache = require("../cache/cache.subreddit");
+const formatPost = require("../helpers/helper.listing").formatPost;
 
 const CACHE_CAPACITY = 500;
 const CACHE_PAGE_SIZE = 25;
@@ -124,9 +125,17 @@ module.exports = class Subreddit extends RedditController {
                 });
             }
 
+            function format(listing) {
+                for(let post of listing.data) {
+                    post = formatPost(post);
+                }
+                return listing;
+            }
+
             subreddit
                 .then(data => { return this.formatListing(data); })
                 .then(cap)
+                .then(format)
                 .then(fetchMedia)
                 .then(resolve)
                 .catch(error => this.parseSnooError(error, reject));
