@@ -1,6 +1,7 @@
 const flatten = require("../helpers/helper.flatten");
 const RedditController = require("./controller.reddit");
 const formatPost = require("../helpers/helper.listing").formatPost;
+const fetchMedia = require("../helpers/helper.listing").fetchMedia;
 
 module.exports = class Submission extends RedditController {
     constructor(options) {
@@ -12,11 +13,6 @@ module.exports = class Submission extends RedditController {
             const self = this;
             if(this._.isEmpty(options.id)) {
                 return reject(new this.RedditError("InvalidArguments", "Must provide id for submission.", 500));
-            }
-
-            function fetchMedia(post) {
-                return self.fetcher
-                .fetchMedia(post);
             }
             
             this.snoo

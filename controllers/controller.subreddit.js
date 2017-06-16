@@ -2,6 +2,7 @@ const RedditController = require("./controller.reddit");
 const paginate = require("../helpers/helper.array").paginate;
 const Cache = require("../cache/cache.subreddit");
 const formatPost = require("../helpers/helper.listing").formatPost;
+const fetchMedia = require("../helpers/helper.listing").fetchMedia;
 
 const CACHE_CAPACITY = 500;
 const CACHE_PAGE_SIZE = 25;
@@ -116,12 +117,22 @@ module.exports = class Subreddit extends RedditController {
                 return listing;
             }
 
-            function fetchMedia(listings) {
-                return self.fetcher
-                .fetchAllMedia(listings.data)
-                .then(data => {
-                    listings.data = data;
-                    return listings;
+            function getMedia(listing) {
+                return new Promise((resolve, reject) => {
+                    let posts = listing.data;
+                    let promises = posts.map(post => {
+                        return fetchMedia(post);
+                    });
+                    Promise
+                    .all(promises)
+                    .then(postsWithMedia => {
+                        listing.data = postsWithMedia;
+                        return resolve(listing);
+                    })
+                    .catch(error => {
+                        console.log("had trouble getting media for posts.");
+                        return resolve(listing);
+                    });
                 });
             }
 
@@ -136,7 +147,7 @@ module.exports = class Subreddit extends RedditController {
                 .then(data => { return this.formatListing(data); })
                 .then(cap)
                 .then(format)
-                .then(fetchMedia)
+                .then(getMedia)
                 .then(resolve)
                 .catch(error => this.parseSnooError(error, reject));
         });
@@ -148,7 +159,7 @@ module.exports = class Subreddit extends RedditController {
 
             function cacheAndFetch(listing) {
                 if(this._.isEmpty(listing)) {
-                    this._cachePages({subreddit: options.subreddit, sort: options.sort}).then().catch(console.log);
+                    this._cachePages({subreddit: options.subreddit, sort: options.sort}).then().catch();
                     return this._getListing(options);
                 }
                 return listing;

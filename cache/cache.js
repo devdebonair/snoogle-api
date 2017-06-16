@@ -40,7 +40,6 @@ module.exports = class Cache {
     }
 
     items(items) {
-        console.log(items);
         this.items = items;
         return this;
     }
@@ -51,7 +50,6 @@ module.exports = class Cache {
     }
 
     exec() {
-        console.log("exec was called");
         return new Promise((resolve, reject) => {
             const error = this._checkArguments();
             if(!_.isEmpty(error)) { return reject(error); }

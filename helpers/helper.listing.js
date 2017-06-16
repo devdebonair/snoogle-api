@@ -2,6 +2,7 @@ const _ = require("lodash");
 const remark = require("remark");
 const remarkSqueeze = require("remark-squeeze-paragraphs");
 const markdownParser = require("../markdown");
+const Miner = require("../miner");
 
 exports.format = (listing) => {
     return new Promise((resolve, reject) => {
@@ -18,7 +19,6 @@ exports.format = (listing) => {
 
         // format each post
         retval.data.map(post => {
-            console.log(post);
             return this.formatPost(post);
         });
         resolve(retval);
@@ -28,8 +28,7 @@ exports.format = (listing) => {
 // TODO: Add Test
 exports.formatPost = (post) => {
     // add hamlet media
-    post.hamlet_media = {};
-    post.hamlet_album = [];
+    post.hamlet_media = [];
     post.hamlet_errors = [];
 
     // Remove multiple newline characters
@@ -38,4 +37,58 @@ exports.formatPost = (post) => {
     post.selftext_parsed = markdownParser(remark().use(remarkSqueeze).parse(post.selftext));
     
     return post;
+};
+
+exports.fetchMedia = (post) => {
+    return new Promise((resolve, reject) => {
+        let miner = new Miner();
+        post.hamlet_media = [];
+        
+        miner
+        .fetch(post.url)
+        .then(media => {
+            post.hamlet_media = media;
+            if(_.isEmpty(post.hamlet_media) && !_.isEmpty(post.preview)) {
+                post.hamlet_media.push(exports.getPreview(post));
+            }
+            resolve(post);
+        })
+        .catch(error => {
+            console.log(error);
+            return resolve(post);
+        });
+    });
+};
+
+exports.getPreview = (post) => {
+    let images = post.preview.images;
+    if(!_.isEmpty(images)){
+        let imageData = images[0];
+        if(imageData.variants.mp4){
+            return extractVariant(imageData.variants.mp4, 'video');
+        }
+        return extractVariant(imageData, 'photo');
+    }
+    return [];
+}
+
+let extractVariant = function(data, type){
+    let source = data.source;
+    let resolutions = data.resolutions;
+    let retval = {};
+    retval.type = type;
+    retval.height = source.height;
+    retval.width = source.width;
+    retval.url = source.url;
+    retval.description = null;
+    retval.sizes = null;
+    if(!_.isEmpty(resolutions) && resolutions.length >= 3) {
+        let middleIndex = Math.ceil(resolutions.length / 2);
+        let lastIndex = resolutions.length - 1;
+        retval.sizes = {};
+        retval.sizes.small = resolutions[0].url;
+        retval.sizes.medium = resolutions[middleIndex].url;
+        retval.sizes.large = resolutions[lastIndex].url;
+    }
+    return retval;
 };
