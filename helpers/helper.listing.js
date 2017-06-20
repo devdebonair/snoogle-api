@@ -32,8 +32,10 @@ exports.formatPost = (post) => {
     post.hamlet_errors = [];
 
     // Remove multiple newline characters
-    post.selftext = post.selftext.replace(/(\n)+/g, "\n");
-    post.selftext = post.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
+    // post.selftext = post.selftext.replace(/(\n)+/g, "\n");
+    // post.selftext = post.selftext.replace(/([ ]+)(?=\n)(\1*)/g, "");
+
+    // Parse markdown into syntax tree
     post.selftext_parsed = markdownParser(remark().use(remarkSqueeze).parse(post.selftext));
     
     return post;
