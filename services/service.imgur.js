@@ -90,7 +90,7 @@ module.exports = class Imgur {
 		return contentType === "image/gif";
 	}
 
-	_extractVideo(data) {
+	_extractImage(data) {
 		let pathRegex = /[^\/]+(?=\/$|$)/g;
 	    let extensionRegex = /\.[A-Za-z]+/;
 	    let extension = null;
@@ -128,7 +128,7 @@ module.exports = class Imgur {
 	    return retval;
 	}
 
-	_extractImage(data) {
+	_extractVideo(data) {
 		let pathRegex = /[^\/]+(?=\/$|$)/g;
 		let extensionRegex = /\.[A-Za-z]+/;
 		let extension = null;
