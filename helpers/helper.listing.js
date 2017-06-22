@@ -51,7 +51,8 @@ exports.fetchMedia = (post) => {
         .then(media => {
             post.hamlet_media = media;
             if(_.isEmpty(post.hamlet_media) && !_.isEmpty(post.preview)) {
-                post.hamlet_media.push(exports.getPreview(post));
+                let preview = exports.getPreview(post);
+                post.hamlet_media.push(preview);
             }
             resolve(post);
         })
@@ -63,6 +64,41 @@ exports.fetchMedia = (post) => {
 };
 
 exports.getPreview = (post) => {
+    function extractVariant(data, type){
+        let source = data.source;
+        let resolutions = data.resolutions;
+        let retval = {};
+        retval.type = type;
+        retval.height = source.height;
+        retval.width = source.width;
+        retval.url = source.url;
+        retval.description = null;
+        retval.sizes = {
+            small: null,
+            medium: null,
+            large: null,
+            huge: null
+        };
+        if(!_.isEmpty(resolutions) && resolutions.length >= 3) {
+            let middleIndex = Math.ceil(resolutions.length / 2);
+            let lastIndex = resolutions.length - 1;
+            retval.sizes.small = resolutions[0].url;
+            retval.sizes.medium = resolutions[middleIndex].url;
+            retval.sizes.large = resolutions[lastIndex].url;
+            retval.sizes.huge = null;
+        }
+
+        // Check if url is an image. (Usually has higher quality than preview)
+        // If all else fails, and the source url for preview exists, use that
+        //      to replace missing size variations.
+        if((/\.(gif|jpg|jpeg|png)$/i).test(post.url)) {
+            retval.sizes.huge = post.url;
+        } else if(retval.url) {
+            retval.sizes.huge = retval.url;
+        }
+        return retval;
+    };
+
     let images = post.preview.images;
     if(!_.isEmpty(images)){
         let imageData = images[0];
@@ -73,24 +109,3 @@ exports.getPreview = (post) => {
     }
     return [];
 }
-
-let extractVariant = function(data, type){
-    let source = data.source;
-    let resolutions = data.resolutions;
-    let retval = {};
-    retval.type = type;
-    retval.height = source.height;
-    retval.width = source.width;
-    retval.url = source.url;
-    retval.description = null;
-    retval.sizes = null;
-    if(!_.isEmpty(resolutions) && resolutions.length >= 3) {
-        let middleIndex = Math.ceil(resolutions.length / 2);
-        let lastIndex = resolutions.length - 1;
-        retval.sizes = {};
-        retval.sizes.small = resolutions[0].url;
-        retval.sizes.medium = resolutions[middleIndex].url;
-        retval.sizes.large = resolutions[lastIndex].url;
-    }
-    return retval;
-};

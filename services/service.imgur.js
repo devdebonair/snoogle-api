@@ -94,25 +94,32 @@ module.exports = class Imgur {
 		let pathRegex = /[^\/]+(?=\/$|$)/g;
 	    let extensionRegex = /\.[A-Za-z]+/;
 	    let extension = null;
-	    let sizes = {};
+	    let sizes = {
+	    	small: null,
+	    	medium: null,
+	    	large: null,
+	    	huge: null
+	    };
 	    let retval = {};
 	    if(pathRegex.test(data.link)) {
 	        extension = data.link.match(pathRegex)[0].match(extensionRegex)[0];
 	    }
 	    if(extension !== null){
 	        let newLink = data.link.replace(extension, "");
-	        let sizeIndicators = ['s','m','l'];
+	        let sizeIndicators = ['s','m','l','h'];
 	        for(let indicator of sizeIndicators) {
 	            switch (indicator) {
 	                case "s":
-	                    sizes.small = newLink + indicator + extension;
+	                    sizes.small = `${newLink}${indicator}${extension}`;
 	                    break;
 	                case "m":
-	                    sizes.medium = newLink + indicator + extension;
+	                    sizes.medium = `${newLink}${indicator}${extension}`;
 	                    break;
 	                case "l":
-	                    sizes.large = newLink + indicator + extension;
+	                    sizes.large = `${newLink}${indicator}${extension}`;
 	                    break;
+	                case "h":
+	                	sizes.huge = `${newLink}${indicator}${extension}`;
 	                default:
 	                    break;
 	            }
