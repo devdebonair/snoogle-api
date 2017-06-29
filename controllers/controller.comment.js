@@ -5,120 +5,103 @@ module.exports = class Comment extends RedditController {
         super(options);
     }
 
-    fetch(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .fetch()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async fetch(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).fetch();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    upvote(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .upvote()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async upvote(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).upvote();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    downvote(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .downvote()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async downvote(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).downvote();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    save(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .save()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async save(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).save();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    unsave(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .unsave()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async unsave(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).unsave();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    unvote(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .unvote()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async unvote(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).unvote();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    reply(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide comment id and text to send.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .reply(options.text)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async reply(options = {}) {
+        if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
+            throw new this.RedditError("InvalidArguments", "Must provide comment id and text to send.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).reply(options.text);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    edit(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide comment id and text to update.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .edit(options.text)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async edit(options = {}) {
+        if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
+            throw new this.RedditError("InvalidArguments", "Must provide comment id and text to update.", 500);
+        }
+        try {
+            return await this.snoo.getComment(options.id).edit(options.text);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    delete(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id for comment.", 500));
-            }
-            this.snoo
-            .getComment(options.id)
-            .delete()
-            .then(_ => resolve({success: true}))
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async delete(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id for comment.", 500);
+        }
+        try {
+            await this.snoo.getComment(options.id).delete();
+            return {success: true};
+        } catch(e) {
+            throw e;
+        }
     }
 };
