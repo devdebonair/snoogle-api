@@ -43,6 +43,7 @@ module.exports = (router) => {
                 return res.status(200).json(data);
             })
             .catch(error => {
+                console.log(error);
                 return res.status(error.code).json({type: error.name, message: error.message, code: error.code});
             });
         });
