@@ -5,105 +5,98 @@ module.exports = class MultiReddit extends RedditController {
         super(options);
     }
 
-    _getMyMultireddit(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name."));
-            }
-            this.snoo
-            .getMyMultireddits()
-            .then(multireddits => {
-                for(let multireddit of multireddits) {
-                    if(multireddit.display_name === options.name) {
-                        return resolve(multireddit);
-                    }
+    async _getMyMultireddit(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name.");
+        }
+        try {
+            let multireddits = await this.snoo.getMyMultireddits();
+            let selectedMultireddit = null;
+            for(let multireddit of multireddits) {
+                if(multireddit.display_name === options.name) {
+                    return multireddit;
                 }
-                return reject(new this.RedditError("NotFound", `Could not find ${options.name} in multireddits.`, 404));
-            })
-            .then(data => resolve(data))
-            .catch(error => this.parseSnooError(error, reject));
-        });
+            }
+            throw new this.RedditError("NotFound", `Could not find ${options.name} in multireddits.`, 404);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    addSubreddit(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name and subreddit."));
-            }
-            this._getMyMultireddit({name: options.name})
-            .then(multi => multi.addSubreddit(options.subreddit))
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async addSubreddit(options = {}) {
+        if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name and subreddit.");
+        }
+        try {
+            let multireddit = await this._getMyMultireddit({name: options.name});
+            return await multireddit.addSubreddit(options.subreddit);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    removeSubreddit(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name and subreddit."));
-            }
-            this._getMyMultireddit({name: options.name})
-            .then(multi => multi.removeSubreddit(options.subreddit))
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async removeSubreddit(options = {}) {
+        if(this._.isEmpty(options.name) || this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name and subreddit.");
+        }
+        try {
+            let multireddit = await this._getMyMultireddit({name: options.name});
+            return await multireddit.removeSubreddit(options.subreddit)
+        } catch(e) {
+            throw e;
+        }
     }
 
-    edit(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name) || this._.isEmpty(options.edits)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name and edits."));
-            }
+    async edit(options = {}) {
+        if(this._.isEmpty(options.name) || this._.isEmpty(options.edits)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name and edits.");
+        }
+        try {
             let promises = [];
-            this._getMyMultireddit({name: options.name})
-            .then(multi => {
-                if(!this._.isEmpty(options.edits.title)) {
-                    const titleNoSpace = options.edits.title.replace(/\s/g,'');
-                    promises.push(multi.rename({newName: titleNoSpace}));
-                }
-                promises.push(multi.edit(options.edits));
-                return Promise.all(promises);
-            })
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+            let multireddit = await this._getMyMultireddit({name: options.name});
+            if(!this._.isEmpty(options.edits.title)) {
+                const titleNoSpace = options.edits.title.replace(/\s/g,'');
+                promises.push(multireddit.rename({newName: titleNoSpace}));
+            }
+            promises.push(multireddit.edit(options.edits));
+            return await Promise.all(promises);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    create(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name) || this._.isEmpty(options.description) || this._.isEmpty(options.subreddits)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name, description, and list of subreddits"));
-            }
-            this.snoo
-            .createMultireddit(options)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async create(options = {}) {
+        if(this._.isEmpty(options.name) || this._.isEmpty(options.description) || this._.isEmpty(options.subreddits)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name, description, and list of subreddits");
+        }
+        try {
+            return await this.snoo.createMultireddit(options);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    delete(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name."));
-            }
-            this._getMyMultireddit({name: options.name})
-            .then(multi => multi.delete())
-            .then(_ => resolve({success: true}))
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async delete(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name.");
+        }
+        try {
+            let multireddit = await this._getMyMultireddit({name: options.name});
+            await multireddit.delete();
+            return {success: true};
+        } catch(e) {
+            throw e;
+        }
     }
 
-    copy(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.user) || this._.isEmpty(options.user_multiname) || this._.isEmpty(options.new_multiname)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide user, multireddit name, and new multireddit name."));
-            }
-            this.snoo
-            .getUser(options.user)
-            .getMultireddit(options.user_multiname)
-            .copy({newName: options.new_multiname})
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async copy(options = {}) {
+        if(this._.isEmpty(options.user) || this._.isEmpty(options.user_multiname) || this._.isEmpty(options.new_multiname)) {
+            throw new this.RedditError("InvalidArguments", "Must provide user, multireddit name, and new multireddit name.");
+        }
+        try {
+            return await this.snoo.getUser(options.user).getMultireddit(options.user_multiname).copy({newName: options.new_multiname})
+        } catch(e) {
+            throw e;
+        }
     }
 };
