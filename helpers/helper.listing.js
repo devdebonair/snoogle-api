@@ -78,55 +78,6 @@ exports.fetchMedia = async (post) => {
     });
 
     return post;
-
-
-    // return new Promise((resolve, reject) => {
-    //     let miner = new Miner();
-    //     let cacheKey = post.url;
-    //     post.hamlet_media = [];
-
-    //     Cache
-    //         .shared()
-    //         .getJSON({key: cacheKey})
-    //         .then((cache) => {
-    //             if(!_.isEmpty(cache)) {
-    //                 post = _.assign(post, cache);
-    //                 resolve(post);
-    //                 return post;
-    //             }
-    //             return miner
-    //                 .fetch(post.url)
-    //                 .then(media => {
-    //                     post.hamlet_media = media;
-    //                     return post;
-    //                 })
-    //                 .then(post => {
-    //                     let emptyMediaWithPreview = (_.isEmpty(post.hamlet_media) && !_.isEmpty(post.preview));
-    //                     if(emptyMediaWithPreview) {
-    //                         let preview = exports.getPreview(post);
-    //                         post.hamlet_media.push(preview);
-    //                     }
-    //                     resolve(post);
-    //                     return post;
-    //                 })
-    //         })
-    //         .then((post) => {
-    //             const options = {
-    //                 key: cacheKey,
-    //                 value: _.pick(post, ["hamlet_media"]),
-    //                 exp: (60 * 60 * 24 * 1) // 1 day
-    //             };
-    //             Cache.shared().storeJSON(options).then().catch(error => {
-    //                 console.log(error);
-    //             });
-    //             return post;
-    //         })
-    //         .catch(error => {
-    //             // TODO: Fails if inital cache errors out. Should fetch from miner if fail.
-    //             console.log(error);
-    //             return resolve(post);
-    //         });
-    // });
 };
 
 exports.getPreview = (post) => {

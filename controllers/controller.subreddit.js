@@ -123,86 +123,9 @@ module.exports = class Subreddit extends RedditController {
         } catch(e) {
             throw e;
         } 
-
-        // return new Promise((resolve, reject) => {
-        //     let subreddit = this.snoo;
-
-        //     switch (sort) {
-        //         case "new":
-        //         subreddit = subreddit.getNew(options.subreddit, options); break;
-        //         case "hot":
-        //         subreddit = subreddit.getHot(options.subreddit, options); break;
-        //         case "rising":
-        //         subreddit = subreddit.getRising(options.subreddit, options); break;
-        //         case "top":
-        //         subreddit = subreddit.getTop(options.subreddit, options); break;
-        //         case "controversial":
-        //         subreddit = subreddit.getControversial(options.subreddit, options); break;
-        //         default:
-        //         return reject(this.errors.invalid.sort);
-        //     }
-
-        //     // slice out extra submissions reddit seems to add (may be temporary)
-        //     function cap(listing) {
-        //         listing.data = listing.data.slice(0,options.limit);
-        //         listing.after = listing.data[listing.data.length - 1].name;
-        //         return listing;
-        //     }
-
-        //     function getMedia(listing) {
-        //         return new Promise((resolve, reject) => {
-        //             let posts = listing.data;
-        //             let promises = posts.map(post => {
-        //                 return fetchMedia(post);
-        //             });
-        //             Promise
-        //             .all(promises)
-        //             .then(postsWithMedia => {
-        //                 listing.data = postsWithMedia;
-        //                 return resolve(listing);
-        //             })
-        //             .catch(error => {
-        //                 console.log("had trouble getting media for posts.");
-        //                 return resolve(listing);
-        //             });
-        //         });
-        //     }
-
-        //     function format(listing) {
-        //         for(let post of listing.data) {
-        //             post = formatPost(post);
-        //         }
-        //         return listing;
-        //     }
-
-        //     subreddit
-        //         .then(data => { return this.formatListing(data); })
-        //         .then(cap)
-        //         .then(format)
-        //         .then(getMedia)
-        //         .then(resolve)
-        //         .catch(error => this.parseSnooError(error, reject));
-        // });
     }
 
     async getListing(options = {}) {
-        // return new Promise((resolve, reject) => {
-        //     const query = { subreddit: options.subreddit, sort: options.sort, after: (options.after || "null") };
-
-        //     function cacheAndFetch(listing) {
-        //         if(this._.isEmpty(listing)) {
-        //             this._cachePages({subreddit: options.subreddit, sort: options.sort}).then().catch();
-        //             return this._getListing(options);
-        //         }
-        //         return listing;
-        //     }
-
-        //     Cache
-        //         .getListing(query)
-        //         .then(cacheAndFetch.bind(this))
-        //         .then(resolve)
-        //         .catch(reject);
-        // });
         const query = { subreddit: options.subreddit, sort: options.sort, after: (options.after || "null") };
         try {
             let listingFromCache = await Cache.getListing(query);
@@ -217,59 +140,6 @@ module.exports = class Subreddit extends RedditController {
     }
 
     async _cachePages(options = {}) {
-        // return new Promise((resolve, reject) => {
-
-        //     const cacheDetails = this._.assign(options, {limit: CACHE_CAPACITY});
-
-        //     function split(listing) {
-        //         const pages = paginate({items: listing.data, pageSize: CACHE_PAGE_SIZE});
-                // const pagesWithFormat = pages.map((listingData, index, origin) => {
-                //     let formatting = {};
-                //     formatting.data = listingData;
-                //     formatting.isFinished = false;
-                //     formatting.after = formatting.data[formatting.data.length - 1].name;
-                //     return formatting;
-                // });
-        //         return pagesWithFormat;
-        //     }
-
-        //     function prepare(listings) {
-        //         let cacheObjects = {};
-        //         cacheObjects.subreddit = cacheDetails.subreddit;
-        //         cacheObjects.sort = cacheDetails.sort;
-        //         cacheObjects.exp = CACHE_EXPIRATION;
-        //         cacheObjects.listings = listings;
-        //         return Cache.storeManyListings(cacheObjects);
-        //     }
-
-        //     this
-        //         ._getListing(cacheDetails)
-        //         .then(split)
-        //         .then(prepare)
-        //         .then(resolve)
-        //         .catch(reject);
-        // });
-        // function split(listing) {
-        //     const pages = paginate({items: listing.data, pageSize: CACHE_PAGE_SIZE});
-        //     const pagesWithFormat = pages.map((listingData, index, origin) => {
-        //         let formatting = {};
-        //         formatting.data = listingData;
-        //         formatting.isFinished = false;
-        //         formatting.after = formatting.data[formatting.data.length - 1].name;
-        //         return formatting;
-        //     });
-        //     return pagesWithFormat;
-        // }
-
-        // function prepare(listings) {
-        //     let cacheObjects = {};
-        //     cacheObjects.subreddit = cacheDetails.subreddit;
-        //     cacheObjects.sort = cacheDetails.sort;
-        //     cacheObjects.exp = CACHE_EXPIRATION;
-        //     cacheObjects.listings = listings;
-        //     return Cache.storeManyListings(cacheObjects);
-        // }
-
         try {
             const cacheDetails = this._.assign(options, {limit: CACHE_CAPACITY});
             let listing = await this._getListing(cacheDetails);
