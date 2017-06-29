@@ -5,125 +5,117 @@ module.exports = class Me extends RedditController {
         super(options);
     }
 
-    fetch() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getMe()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async fetch() {
+        try {
+            return await this.snoo.getMe();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getFriends() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getFriends()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getFriends() {
+        try {
+            return await this.snoo.getFriends();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getBlocked() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getBlockedUsers()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getBlocked() {
+        try {
+            return await this.snoo.getBlockedUsers();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getMultireddits() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getMyMultireddits()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getMultireddits() {
+        try {
+            return await this.snoo.getMyMultireddits();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getSubscriptions() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getSubscriptions()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getSubscriptions() {
+        try {
+            return await this.snoo.getSubscriptions()
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getTrophies() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getMyTrophies()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getTrophies() {
+        try {
+            return await this.snoo.getMyTrophies();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    _getInbox(options = {}) {
-        return new Promise((resolve, reject) => {
+    async _getInbox(options = {}) {
+        try {
             let defaults = { filter: null };
             options = this._.assign(defaults, options);
-            this.snoo
-            .getInbox(options)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+            return await this.snoo.getInbox(options);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getUnreadInbox() {
-        return new Promise((resolve, reject) => {
-            this._getInbox({ filter: "unread" })
-            .then(resolve)
-            .catch(reject);
-        });
+    async getUnreadInbox() {
+        try {
+            return await this._getInbox({ filter: "unread" });
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getInbox() {
-        return new Promise((resolve, reject) => {
-            this._getInbox()
-            .then(resolve)
-            .catch(reject);
-        });
+    async getInbox() {
+        try {
+            return await this._getInbox();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getPrivateMessages() {
-        return new Promise((resolve, reject) => {
-            this._getInbox({ filter: "messages" })
-            .then(resolve)
-            .catch(reject);
-        });
+    async getPrivateMessages() {
+        try {
+            return await this._getInbox({ filter: "messages" });
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getCommentReplies() {
-        return new Promise((resolve, reject) => {
-            this._getInbox({ filter: "comments" })
-            .then(resolve)
-            .catch(reject);
-        });
+    async getCommentReplies() {
+        try {
+            return await this._getInbox({ filter: "comments" });
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getSubmissionReplies() {
-        return new Promise((resolve, reject) => {
-            this._getInbox({ filter: "selfreply" })
-            .then(resolve)
-            .catch(reject);
-        });
+    async getSubmissionReplies() {
+        try {
+            return await this._getInbox({ filter: "selfreply" });
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getMentions() {
-        return new Promise((resolve, reject) => {
-            this._getInbox({ filter: "mentions" })
-            .then(resolve)
-            .catch(reject);
-        });
+    async getMentions() {
+        try {
+            return await this._getInbox({ filter: "mentions" });
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getSentMessages() {
-        return new Promise((resolve, reject) => {
-            this.snoo
-            .getSentMessages()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getSentMessages() {
+        try {
+            return await this.snoo.getSentMessages();
+        } catch(e) {
+            throw e;
+        }
     }
 };
