@@ -5,99 +5,90 @@ module.exports = class User extends RedditController {
         super(options);
     }
 
-    addFriend(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name of user.", 500));
-            }
-            this.snoo
-            .getUser(options.name)
-            .friend()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async addFriend(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name of user.", 500);
+        }
+        try {
+            return await this.snoo.getUser(options.name).friend();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    removeFriend(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name of user.", 500));
-            }
-            this.snoo
-            .getUser(options.name)
-            .unfriend()
-            .then(_ => resolve({success: true}))
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async removeFriend(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name of user.", 500);
+        }
+        try {
+            await this.snoo.getUser(options.name).unfriend();
+            return {success: true};
+        } catch(e) {
+            throw e;
+        }
     }
 
-    fetch(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name of user.", 500));
-            }
-            this.snoo
-            .getUser(options.name)
-            .fetch()
-            .then(user => {
-                let data = user.toJSON();
-                resolve(data);
-            })
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async fetch(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name of user.", 500);
+        }
+        try {
+            let user = await this.snoo.getUser(options.name).fetch();
+            return user.toJSON();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getTrophies(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide name of user.", 500));
-            }
-            this.snoo
-            .getUser(options.name)
-            .getTrophies()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getTrophies(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name of user.", 500);
+        }
+        try {
+            return await this.snoo.getUser(options.name).getTrophies();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getSubmissions(options = {}) {
-        return new Promise((resolve, reject) => {
-            let self = this;
-            function fetchMedia(listings) {
-                return self.fetcher.fetchAllMedia(listings.data).then((data) => {
-                    listings.data = data;
-                    return listings;
-                });
-            }
-            if(this._.isEmpty(options.name)) {
-                return reject("InvalidArguments", "Must provide name.");
-            }
-            let supportedSorts = ["new", "hot", "top", "controversial"];
-            let defaults = { name: "", sort: "hot"};
-            options = this._.assign(defaults, options);
-            this.snoo
-            .getUser(options.name)
-            .getSubmissions(options)
-            .then(data => this.formatListing(data, options.ommittedKeys))
-            .then(fetchMedia)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getSubmissions(options = {}) {
+        let self = this;
+        function fetchMedia(listings) {
+            return self.fetcher.fetchAllMedia(listings.data).then((data) => {
+                listings.data = data;
+                return listings;
+            });
+        }
+
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name of user.", 500);
+        }
+
+        let supportedSorts = ["new", "hot", "top", "controversial"];
+        let defaults = { name: "", sort: "hot"};
+        options = this._.assign(defaults, options);
+
+        try {
+            let submissions = await this.snoo.getUser(options.name).getSubmissions(options);
+            let formattedListing = this.formatListing(submissions, options.ommittedKeys);
+            let listingWithMedia = fetchMedia(formattedListing);
+            return listingWithMedia;
+        } catch(e) {
+            throw e;
+        }
     }
 
-    getComments(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.name)) {
-                return reject("InvalidArguments", "Must provide name.");
-            }
-            let supportedSorts = ["new", "hot", "top", "controversial"];
-            let defaults = { name: "", sort: "hot"};
-            options = this._.assign(defaults, options);
-            this.snoo
-            .getUser(options.name)
-            .getComments(options)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async getComments(options = {}) {
+        if(this._.isEmpty(options.name)) {
+            throw new this.RedditError("InvalidArguments", "Must provide name of user.", 500);
+        }
+        let supportedSorts = ["new", "hot", "top", "controversial"];
+        let defaults = { name: "", sort: "hot"};
+        options = this._.assign(defaults, options);
+        try {
+            return await this.snoo.getUser(options.name).getComments(options);
+        } catch(e) {
+            throw e;
+        }
     }
 };
