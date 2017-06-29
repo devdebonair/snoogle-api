@@ -1,4 +1,8 @@
-require("dotenv").config();
+let dotenv = require("dotenv").config({path: '../.env'});
+if(dotenv.error) {
+    console.log(dotenv.error);
+    process.exit(1); 
+}
 const account = require("../config").test.reddit;
 const User = require("../controllers").User;
 
