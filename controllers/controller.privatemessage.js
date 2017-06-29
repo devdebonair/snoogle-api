@@ -5,55 +5,49 @@ module.exports = class PrivateMessage extends RedditController {
         super(options);
     }
 
-    compose(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.to) || this._.isEmpty(options.subject) || this._.isEmpty(options.text)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide to, subject and text."));
-            }
-
-            this.snoo
-            .composeMessage(options)
-            .then(_ => resolve({ success: true }))
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async compose(options = {}) {
+        if(this._.isEmpty(options.to) || this._.isEmpty(options.subject) || this._.isEmpty(options.text)) {
+            throw new this.RedditError("InvalidArguments", "Must provide to, subject and text.");
+        }
+        try {
+            await this.snoo.composeMessage(options);
+            return { success: true };
+        } catch(e) {
+            throw e;
+        }
     }
 
-    delete(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id of private message."));
-            }
-            this.snoo
-            .getMessage(options.id)
-            .deleteFromInbox()
-            .then(_ => resolve({ success: true }))
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async delete(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id of private message.");
+        }
+        try {
+            await this.snoo.getMessage(options.id).deleteFromInbox();
+            return { success: true };
+        } catch(e) {
+            throw e;
+        }
     }
 
-    fetch(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id of private message."));
-            }
-            this.snoo
-            .getMessage(options.id)
-            .fetch()
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async fetch(options = {}) {
+        if(this._.isEmpty(options.id)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id of private message.");
+        }
+        try {
+            return await this.snoo.getMessage(options.id).fetch();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    reply(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide id of private message and text to send."));
-            }
-            this.snoo
-            .getMessage(options.id)
-            .reply(options.text)
-            .then(resolve)
-            .catch(error => this.parseSnooError(error, reject));
-        });
+    async reply(options = {}) {
+        if(this._.isEmpty(options.id) || this._.isEmpty(options.text)) {
+            throw new this.RedditError("InvalidArguments", "Must provide id of private message and text to send.");
+        }
+        try {
+            return await this.snoo.getMessage(options.id).reply(options.text);
+        } catch(e) {
+            throw e;
+        }
     }
 };
