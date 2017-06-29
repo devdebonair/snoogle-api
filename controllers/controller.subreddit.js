@@ -24,64 +24,52 @@ module.exports = class Subreddit extends RedditController {
         }
     }
 
-    subscribe(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.subreddit)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide subreddit."));
-            }
-            
-            this.snoo
-                .getSubreddit(options.subreddit)
-                .subscribe()
-                .then(resolve)
-                .catch(error => this.parseSnooError(error, reject));
-        });
+    async subscribe(options = {}) {
+        if(this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide subreddit.");
+        }
+        try {
+            return await this.snoo.getSubreddit(options.subreddit).subscribe();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    unsubscribe(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.subreddit)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide subreddit."));
-            }
-            
-            this.snoo
-                .getSubreddit(options.subreddit)
-                .unsubscribe()
-                .then(resolve)
-                .catch(error => this.parseSnooError(error, reject));
-        });
+    async unsubscribe(options = {}) {
+        if(this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide subreddit.");
+        }
+        try {
+            return await this.snoo.getSubreddit(options.subreddit).unsubscribe();
+        } catch(e) {
+            throw e;
+        }
     }
 
-    submitLink(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.title) || this._.isEmpty(options.url) || this._.isEmpty(options.subreddit)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide title, url, and subreddit", 500));
-            }
-            const defaults = {subreddit: "", title: "", url: "", sendReplies: true};
-            options = this._.assign(defaults, options);
-            
-            this.snoo
-                .getSubreddit(options.subreddit)
-                .submitLink(options)
-                .then(resolve)
-                .catch(error => this.parseSnooError(error, reject));
-        });
+    async submitLink(options = {}) {
+        if(this._.isEmpty(options.title) || this._.isEmpty(options.url) || this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide title, url, and subreddit", 500);
+        }
+        const defaults = {subreddit: "", title: "", url: "", sendReplies: true};
+        options = this._.assign(defaults, options);
+        try {
+            return await this.snoo.getSubreddit(options.subreddit).submitLink(options);
+        } catch(e) {
+            throw e;
+        }
     }
 
-    submitText(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(this._.isEmpty(options.title) || this._.isEmpty(options.text) || this._.isEmpty(options.subreddit)) {
-                return reject(new this.RedditError("InvalidArguments", "Must provide title, text, and subreddit", 500));
-            }
-            const defaults = {subreddit: "", title: "", text: "", sendReplies: true};
-            options = this._.assign(defaults, options);
-            
-            this.snoo
-                .getSubreddit(options.subreddit)
-                .submitSelfpost(options)
-                .then(resolve)
-                .catch(error => this.parseSnooError(error, reject));
-        });
+    async submitText(options = {}) {
+        if(this._.isEmpty(options.title) || this._.isEmpty(options.text) || this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide title, text, and subreddit", 500);
+        }
+        const defaults = {subreddit: "", title: "", text: "", sendReplies: true};
+        options = this._.assign(defaults, options);
+        try {
+            return await this.snoo.getSubreddit(options.subreddit).submitSelfpost(options);
+        } catch(e) {
+            throw e;
+        }
     }
 
     async _getListing(options = {}) {
