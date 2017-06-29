@@ -10,12 +10,16 @@ module.exports = class Miner {
         this.services.gfycat = new Gfycat();
 	}
 
-    fetch(url) {
-        let service = this.getService(url);
-        if(service) {
-            return service.fetch(url);
-        } else {
-            return new Promise((resolve) => { resolve([]) });
+    async fetch(url) {
+        try {
+            let service = this.getService(url);
+            if(service) {
+                return await service.fetch(url);
+            } else {
+                return [];
+            }
+        } catch(e) {
+            return [];
         }
     }
 

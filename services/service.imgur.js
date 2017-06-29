@@ -12,23 +12,18 @@ imgur.setClientId(clientId);
 module.exports = class Imgur {
 	constuctor() {}
 
-	fetch(url) {
-		return new Promise((resolve, reject) => {
-			let parsedURL = URL.parse(url);
-			let hostname = parsedURL.hostname;
-			let regex = /[^\/]+(?=\/$|$)/g;
-			let mediaID = this.parseId(url);
-
-			if(!hostname.toLowerCase().includes('imgur')){ 
-				return resolve(new Error(`Invalid Imgur URL: ${url}`));
-			}
-	        
-	        if(parsedURL.pathname.includes('/a/') || parsedURL.pathname.includes('/gallery/')){
-	            return this.album(mediaID).then(resolve).catch(reject);
-	        }
-
-	        return this.image(mediaID).then(resolve).catch(reject);
-		});
+	async fetch(url) {
+		let parsedURL = URL.parse(url);
+		let hostname = parsedURL.hostname;
+		let regex = /[^\/]+(?=\/$|$)/g;
+		let mediaID = this.parseId(url);
+		if(!hostname.toLowerCase().includes('imgur')){ 
+			throw new Error(`Invalid Imgur URL: ${url}`);
+		}
+        if(parsedURL.pathname.includes('/a/') || parsedURL.pathname.includes('/gallery/')){
+            return await this.album(mediaID);
+        }
+	    return this.image(mediaID);
 	}
 
 	parseId(url) {
@@ -36,54 +31,50 @@ module.exports = class Imgur {
 		return url.match(regex)[0].replace(/\.[A-Za-z]+/g, "");
 	}
 
-	album(id) {
-		let self = this;
-		return new Promise((resolve, reject) => {
-			imgur
-			.getAlbumInfo(id)
-			.then(media => {
-				let images = [];
-		        let imagesData = media.data.images;
-		        let retval = [];
-		        if(imagesData.length > 1) {
-		            for(let image of imagesData){
-		                if(self._isGif(image.type)) {
-		                    images.push(self._extractVideo(image));
-		                } else {
-		                    images.push(self._extractImage(image));
-		                }
-		            }
-		            retval = images;
-		        } else if(imagesData.length === 1) {
-		            if(self._isGif(imagesData[0].type)) {
-		                images.push(self._extractVideo(imagesData[0]));
-		            } else {
-		                images.push(self._extractImage(imagesData[0]));
-		            }
-		        }
-		        return resolve(retval);
-			})
-			.catch(reject);
-		});
+	async album(id) {
+		try {
+			let album = await imgur.getAlbumInfo(id);
+			let images = [];
+	        let imagesData = album.data.images;
+	        let retval = [];
+
+	        if(imagesData.length > 1) {
+	            for(let image of imagesData){
+	                if(this._isGif(image.type)) {
+	                    images.push(this._extractVideo(image));
+	                } else {
+	                    images.push(this._extractImage(image));
+	                }
+	            }
+	            retval = images;
+	        } else if(imagesData.length === 1) {
+	            if(this._isGif(imagesData[0].type)) {
+	                images.push(this._extractVideo(imagesData[0]));
+	            } else {
+	                images.push(this._extractImage(imagesData[0]));
+	            }
+	        }
+	        return retval;
+		} catch(e) {
+			throw e;
+		}
+
 	}
 
-	image(id) {
-		let self = this;
-		return new Promise((resolve, reject) => {
-			imgur
-			.getInfo(id)
-			.then(media => {
-		        let retval = [];
-		        let data = media.data;
-		        if(self._isGif(data.type)) {
-		            retval = [self._extractVideo(data)];
-		        } else {
-		            retval = [self._extractImage(data)];
-		        }
-		        return resolve(retval);
-		    })
-		    .catch(reject);
-		});
+	async image(id) {
+		try {
+			let image = await imgur.getInfo(id);
+	        let retval = [];
+	        let data = image.data;
+	        if(this._isGif(data.type)) {
+	            retval = [this._extractVideo(data)];
+	        } else {
+	            retval = [this._extractImage(data)];
+	        }
+	        return retval;
+		} catch(e) {
+			throw e;
+		}
 	}
 
 	_isGif(contentType) {
