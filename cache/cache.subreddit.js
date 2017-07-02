@@ -8,7 +8,6 @@ exports.storeListing = (options = {}) => {
 		value: options.listing,
 		exp: options.exp
 	};
-
 	return Cache.shared().hmap().store().items(objectToCache).exec();
 };
 
@@ -16,7 +15,7 @@ exports.storeListing = (options = {}) => {
 exports.storeManyListings = (options = {}) => {
 	let objectsToCache = {};
 	objectsToCache.map = `${options.subreddit}:${options.sort}`;
-	objectsToCache.exp = 60 * 12;
+	objectsToCache.exp = options.exp;
 
 	const listings = options.listings.map((item, index, origin) => {
 		const key = (index <= 0) ? "null" : origin[index-1].after; // use 'null' as key for the first item 

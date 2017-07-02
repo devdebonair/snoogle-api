@@ -70,7 +70,7 @@ exports.fetchMedia = async (post) => {
     const options = {
         key: cacheKey,
         value: _.pick(post, ["hamlet_media"]),
-        exp: (60 * 60 * 24 * 1) // 1 day
+        exp: null
     };
 
     Cache.shared().storeJSON(options).then().catch(error => {

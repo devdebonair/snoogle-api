@@ -30,7 +30,7 @@ module.exports = class Gfycat {
         try {
         	let media = await request(options);
         	let gfyItem = media.gfyItem;
-        	return this._extractVideo(gfyItem);
+        	return [this._extractVideo(gfyItem)];
         } catch(e) {
         	throw e;
         }

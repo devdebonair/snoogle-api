@@ -143,7 +143,9 @@ module.exports = class Cache {
                 const valueToStore = JSON.stringify(item.value);
                 pipeline.hmset(options.map, item.key, valueToStore);
             }
-            pipeline.expire(options.map, options.exp);
+            if(options.exp) {
+                pipeline.expire(options.map, options.exp);
+            }
             pipeline.exec()
             .then(resolve)
             .catch(reject);
@@ -155,7 +157,7 @@ module.exports = class Cache {
     //     key: "[after]",
     //     value: [Listing]
     // }
-    storeJSONHash(options = {exp: 3600}) {
+    storeJSONHash(options = {}) {
         return new Promise((resolve, reject) => {
             if(_.isEmpty(options.map) || _.isEmpty(options.key) || _.isEmpty(options.value)) {
                 return resolve(null);
@@ -183,17 +185,19 @@ module.exports = class Cache {
     }
 
     // { key: "[post].id", value: Submission}
-    storeJSON(options = { exp: 3600 }) {
-        return new Promise((resolve, reject) => {
-            if(_.isEmpty(options.key) || _.isEmpty(options.value)) {
-                return resolve(null);
-            }
+    async storeJSON(options = {}) {
+        if(_.isEmpty(options.key) || _.isEmpty(options.value)) {
+            return resolve(null);
+        }
+        try {
             const valueToStore = JSON.stringify(options.value);
-            return this.redis
-            .set(options.key, valueToStore, "EX", options.exp)
-            .then(resolve)
-            .catch(reject);
-        });
+            if(options.exp) {
+                return await this.redis.set(options.key, valueToStore, "EX", options.exp)
+            }
+            return await this.redis.set(options.key, valueToStore);
+        } catch(e) {
+            throw e;
+        }
     }
 
     // { key: "[post].id" }
