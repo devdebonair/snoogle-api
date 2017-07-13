@@ -27,9 +27,16 @@ exports.format = (listing) => {
 
 // TODO: Add Test
 exports.formatPost = (post) => {
+
+    let miner = new Miner();
+
     // add hamlet media
     post.hamlet_media = [];
     post.hamlet_errors = [];
+
+    if(post.post_hint === "link" && miner.isImgur(post.url)) {
+        post.post_hint = "image";
+    }
 
     // Remove multiple newline characters
     // post.selftext = post.selftext.replace(/(\n)+/g, "\n");

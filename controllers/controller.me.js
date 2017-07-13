@@ -7,7 +7,12 @@ module.exports = class Me extends RedditController {
 
     async fetch() {
         try {
-            return await this.snoo.getMe();
+            let me = await this.snoo.getMe();
+            let subscriptions = await this.getSubscriptions();
+            let multireddits = await this.getMultireddits();
+            me.hamlet_subscriptions = subscriptions;
+            me.hamlet_multireddits = multireddits;
+            return me;
         } catch(e) {
             throw e;
         }

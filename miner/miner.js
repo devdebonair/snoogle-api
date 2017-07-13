@@ -24,14 +24,24 @@ module.exports = class Miner {
     }
 
     getService(url) {
-        let parsedURL = URL.parse(url);
-        let hostname = parsedURL.hostname;
-        if(hostname.toLowerCase().includes("imgur")) {
+        if(this.isImgur(url)) {
             return this.services.imgur;
         }
-        if(hostname.toLowerCase().includes("gfycat")) {
+        if(this.isGfycat(url)) {
             return this.services.gfycat;
         }
         return null;
+    }
+
+    isImgur(url) {
+        let parsedURL = URL.parse(url);
+        let hostname = parsedURL.hostname;
+        return hostname.toLowerCase().includes("imgur")
+    }
+
+    isGfycat() {
+        let parsedURL = URL.parse(url);
+        let hostname = parsedURL.hostname;
+        return hostname.toLowerCase().includes("gfycat")   
     }
 };

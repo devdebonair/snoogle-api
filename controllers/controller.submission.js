@@ -17,7 +17,7 @@ module.exports = class Submission extends RedditController {
             submission.comments = flatten({replies: submission.comments.toJSON()});
             let formattedPost = formatPost(submission);
             let postWithMedia = await fetchMedia(formattedPost);
-            return postWithMedia;
+            return postWithFormattedPostHint;
         } catch(e) {
             throw e;
         }
