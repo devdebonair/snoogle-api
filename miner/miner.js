@@ -36,12 +36,12 @@ module.exports = class Miner {
     isImgur(url) {
         let parsedURL = URL.parse(url);
         let hostname = parsedURL.hostname;
-        return hostname.toLowerCase().includes("imgur")
+        return hostname.toLowerCase().includes("imgur");
     }
 
-    isGfycat() {
+    isGfycat(url) {
         let parsedURL = URL.parse(url);
         let hostname = parsedURL.hostname;
-        return hostname.toLowerCase().includes("gfycat")   
+        return hostname.toLowerCase().includes("gfycat");
     }
 };
