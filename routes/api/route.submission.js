@@ -41,10 +41,10 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/submissions/:id/comments")
+    router.route("/submissions/:id/comments/:sort")
         .get((req, res) => {
             const submission = new Submission(account);
-            const options = {id: req.params.id};
+            const options = {id: req.params.id, sort: req.params.sort};
             submission.getComments(options)
             .then(data => {
                 return res.status(200).json(data);

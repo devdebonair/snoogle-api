@@ -24,16 +24,20 @@ module.exports = class Submission extends RedditController {
     }
 
     async getComments(options) {
+        const defaults = { id: null, sort: "hot" };
+        options = this._.assign(defaults, options);
         if(this._.isEmpty(options.id)) {
             throw new this.RedditError("InvalidArguments", "Must provide id for submission.", 500);
         }
         try {
-            let comments = await this.snoo.getSubmission(options.id).comments;
+            // let comments = await this.snoo.getSubmission(options.id).comments;
+            let comments = await this.snoo.oauthRequest({ uri: `/comments/article`, method: 'get', qs: {article: options.id, sort: options.sort}});
             let commentsParsed = comments.toJSON();
-            let replies = {replies: comments};
+            let replies = {replies: commentsParsed.comments};
             let flattenedComments = flatten(replies);
             return flattenedComments;
         } catch(e) {
+            console.log(e);
             throw e;
         }
     }
