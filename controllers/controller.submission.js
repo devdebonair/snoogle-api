@@ -19,7 +19,6 @@ module.exports = class Submission extends RedditController {
             let postWithMedia = await fetchMedia(formattedPost);
             return postWithMedia;
         } catch(e) {
-            console.log(e);
             throw e;
         }
     }

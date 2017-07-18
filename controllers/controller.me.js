@@ -44,7 +44,7 @@ module.exports = class Me extends RedditController {
 
     async getSubscriptions() {
         try {
-            return await this.snoo.getSubscriptions()
+            return await this.snoo.getSubscriptions({limit: 100})
         } catch(e) {
             throw e;
         }
