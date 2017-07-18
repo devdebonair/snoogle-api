@@ -17,8 +17,9 @@ module.exports = class Submission extends RedditController {
             submission.comments = flatten({replies: submission.comments.toJSON()});
             let formattedPost = formatPost(submission);
             let postWithMedia = await fetchMedia(formattedPost);
-            return postWithFormattedPostHint;
+            return postWithMedia;
         } catch(e) {
+            console.log(e);
             throw e;
         }
     }
@@ -37,7 +38,6 @@ module.exports = class Submission extends RedditController {
             let flattenedComments = flatten(replies);
             return flattenedComments;
         } catch(e) {
-            console.log(e);
             throw e;
         }
     }
