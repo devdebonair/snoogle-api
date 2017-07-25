@@ -67,7 +67,7 @@ module.exports = class Search extends RedditController {
 
     async getVideos(options = {}) {
         try {
-            let supportedSites = ["youtube", "youtu", "vimeo", "twitch", "vimeo", "worldstar", "vid.me", "pornhub", "spankbang", "spankwire", "youporn", "ruleporn", "periscope", "mixer", "instagram", "hornbunny", "streamable", "funnyordie", "dailymotion", "crunchyroll"];
+            let supportedSites = ["youtube", "youtu", "vimeo", "twitch", "vimeo", "worldstar", "vid.me", "pornhub", "spankbang", "spankwire", "youporn", "ruleporn", "periscope", "mixer", "instagram", "hornbunny", "streamable", "funnyordie", "dailymotion", "crunchyroll", "wankflix"];
             let supportedMediaExtensions = ["mp4"];
 
             let siteSearch = supportedSites.reduce((initial, current, index) => {

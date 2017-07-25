@@ -2,7 +2,7 @@ const Search = require("../../controllers").Search;
 const account = require("../../config").reddit;
 
 module.exports = (router) => {
-    router.route("/search/:term/photos")
+    router.route("/search/photos")
         .get((req, res) => {
             const search = new Search(account);
             const options = {
@@ -10,7 +10,7 @@ module.exports = (router) => {
                 subreddit: req.query.subreddit,
                 restrictSr: req.query.restrict,
                 sort: req.query.sort,
-                term: req.params.term
+                term: req.query.term
             };
             search.getPhotos(options)
             .then(data => {
@@ -21,7 +21,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/search/:term/videos")
+    router.route("/search/videos")
         .get((req, res) => {
             const search = new Search(account);
             const options = {
@@ -29,7 +29,7 @@ module.exports = (router) => {
                 subreddit: req.query.subreddit,
                 restrictSr: req.query.restrict,
                 sort: req.query.sort,
-                term: req.params.term
+                term: req.query.term
             };
             search.getVideos(options)
             .then(data => {
@@ -40,7 +40,7 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/search/:term/links")
+    router.route("/search/links")
         .get((req, res) => {
             const search = new Search(account);
             const options = {
@@ -48,7 +48,7 @@ module.exports = (router) => {
                 subreddit: req.query.subreddit,
                 restrictSr: req.query.restrict,
                 sort: req.query.sort,
-                term: req.params.term
+                term: req.query.term
             };
             search.getLinks(options)
             .then(data => {
@@ -59,11 +59,11 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/search/:term/subreddits")
+    router.route("/search/subreddits")
         .get((req, res) => {
             const search = new Search(account);
             const options = {
-                query: req.params.term
+                query: req.query.term
             };
             search.getSubreddits(options)
             .then(data => {
@@ -74,11 +74,11 @@ module.exports = (router) => {
             });
         });
 
-    router.route("/search/:term/discussions")
+    router.route("/search/discussions")
         .get((req, res) => {
             const search = new Search(account);
             const options = {
-                query: req.params.term
+                query: req.query.term
             };
             search.getDiscussions(options)
             .then(data => {
