@@ -1,4 +1,5 @@
 const RedditController = require("./controller.reddit");
+const fetchMedia = require("../helpers/helper.listing").fetchMedia;
 
 module.exports = class Search extends RedditController {
     constructor(options) {
@@ -9,7 +10,6 @@ module.exports = class Search extends RedditController {
         try {
             let supportedSites = ["imgur", "gfycat"];
             let supportedMediaExtensions = ["jpg", "png", "webm", "gif", "mp4", "jpeg"];
-
             let siteSearch = supportedSites.reduce((initial, current, index) => {
                 return initial += (index == supportedSites.length - 1) ? ` site:${current}` : ` site:${current} OR`;
             }, "").trim();
@@ -19,12 +19,17 @@ module.exports = class Search extends RedditController {
             }, "").trim();
 
             const defaults = {time: "week", query: null, subreddit: null, restrictSr: false, sort: "relevance", syntax: "lucene"};
-            let params = this._.assign(defaults, options);
+            let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
             const searchTerm = `${options.term} (${siteSearch}) OR (url:(${extensionSearch}))`;
             params.query = searchTerm;
             const photos = await this.snoo.search(params);
-            return photos;
+            let promises = photos.map(post => {
+                return fetchMedia(post);
+            });
+            let photosWithMedia = await Promise.all(promises);
+            return photosWithMedia;
         } catch(e) {
+        	console.log(e);
             throw e;
         }
     }
@@ -32,11 +37,12 @@ module.exports = class Search extends RedditController {
     async getDiscussions(options = {}) {
         try {
             const defaults = {time: "week", query: null, subreddit: null, restrictSr: false, sort: "relevance", syntax: "lucene"};
-            let params = this._.assign(defaults, options);
-            params.query = `self:yes ${options.query}`;
+            let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
+            params.query = `self:yes ${options.term}`;
             let discussions = await this.snoo.search(params);
             return discussions;
         } catch(e) {
+        	console.log(e);
             throw e;
         }
     }
@@ -55,12 +61,13 @@ module.exports = class Search extends RedditController {
             }, "").trim();
 
             const defaults = {time: "week", query: null, subreddit: null, restrictSr: false, sort: "relevance", syntax: "lucene"};
-            let params = this._.assign(defaults, options);
+            let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
             const searchTerm = `${options.term} self:no (${siteSearch}) AND (-url:(${extensionSearch}))`;
             params.query = searchTerm;
             const photos = await this.snoo.search(params);
             return photos;
         } catch(e) {
+        	console.log(e);
             throw e;
         }
     }
@@ -79,7 +86,7 @@ module.exports = class Search extends RedditController {
             }, "").trim();
 
             const defaults = {time: "week", query: null, subreddit: null, restrictSr: false, sort: "relevance", syntax: "lucene"};
-            let params = this._.assign(defaults, options);
+            let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
             const searchTerm = `${options.term} (${siteSearch}) OR (url:(${extensionSearch}))`;
             params.query = searchTerm;
             const videos = await this.snoo.search(params);
@@ -92,10 +99,11 @@ module.exports = class Search extends RedditController {
     async getSubreddits(options = {}) {
         try {
             let defaults = {query: null};
-            let params = this._.assign(defaults, options);
+            let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
             let subreddits = await this.snoo.searchSubreddits(params);
             return subreddits;
         } catch(e) {
+        	console.log(e);
             throw e;
         }
     }

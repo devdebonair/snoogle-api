@@ -78,7 +78,11 @@ module.exports = (router) => {
         .get((req, res) => {
             const search = new Search(account);
             const options = {
-                query: req.query.term
+                time: req.query.time,
+                subreddit: req.query.subreddit,
+                restrictSr: req.query.restrict,
+                sort: req.query.sort,
+                term: req.query.term
             };
             search.getDiscussions(options)
             .then(data => {
