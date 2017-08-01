@@ -1,5 +1,6 @@
 const RedditController = require("./controller.reddit");
 const fetchMedia = require("../helpers/helper.listing").fetchMedia;
+const formatPost = require("../helpers/helper.listing").formatPost;
 
 module.exports = class Search extends RedditController {
     constructor(options) {
@@ -40,6 +41,7 @@ module.exports = class Search extends RedditController {
             let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
             params.query = `self:yes ${options.term}`;
             let discussions = await this.snoo.search(params);
+            discussions = discussions.map(discussion => { return formatPost(discussion) });
             return discussions;
         } catch(e) {
         	console.log(e);
