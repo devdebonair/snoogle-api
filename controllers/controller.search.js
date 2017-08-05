@@ -1,6 +1,8 @@
 const RedditController = require("./controller.reddit");
 const fetchMedia = require("../helpers/helper.listing").fetchMedia;
 const formatPost = require("../helpers/helper.listing").formatPost;
+const remark = require("remark");
+const remarkStrip = require("strip-markdown");
 
 module.exports = class Search extends RedditController {
     constructor(options) {
@@ -103,6 +105,12 @@ module.exports = class Search extends RedditController {
             let defaults = {query: null};
             let params = this._.assign(defaults, this._.pickBy(options, this._.identity));
             let subreddits = await this.snoo.searchSubreddits(params);
+            subreddits.map((subreddit) => {
+         		remark().use(remarkStrip).process(subreddit.public_description, (err, file) => {
+         			subreddit.public_description_stripped = String(file);
+         		});
+         		return subreddit;
+            });
             return subreddits;
         } catch(e) {
         	console.log(e);

@@ -19,14 +19,16 @@
     "gfycat-sdk": "^1.0.11",
     "imgur": "^0.2.0",
     "ioredis": "^2.5.0",
-    "method-override": "^2.3.7",
-    "request": "^2.79.0",
-    "request-promise": "^4.1.1",
-    "snoowrap": "^1.11.3",
     "mdast-util-definitions": "^1.2.0",
     "mdast-util-to-string": "^1.0.2",
+    "method-override": "^2.3.7",
     "remark": "^7.0.1",
-    "remark-squeeze-paragraphs": "^3.0.0"
+    "remark-squeeze-paragraphs": "^3.0.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "save": "^2.3.1",
+    "snoowrap": "^1.11.3",
+    "strip-markdown": "^3.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

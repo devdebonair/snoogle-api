@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const remark = require("remark");
 const remarkSqueeze = require("remark-squeeze-paragraphs");
+const remarkStrip = require("strip-markdown");
 const markdownParser = require("../markdown");
 const Miner = require("../miner");
 const Cache = require("../cache");
@@ -44,6 +45,11 @@ exports.formatPost = (post) => {
 
     // Parse markdown into syntax tree
     post.selftext_parsed = markdownParser(remark().use(remarkSqueeze).parse(post.selftext));
+
+    // Strip markdown
+    remark().use(remarkStrip).process(post.selftext, function(err, file) {
+    	post.selftext_stripped = String(file);	
+    });
     
     return post;
 };
