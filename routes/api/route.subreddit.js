@@ -93,11 +93,23 @@ module.exports = (router) => {
             const options = { title: req.body.title, url: req.body.url, subreddit: req.params.name };
             subreddit.submitLink(options)
             .then(data => {
-                return res.status(200).json(data);
+            	return res.status(200).json(data);
             })
             .catch(error => {
                 return res.status(error.code).json({type: error.name, message: error.message, code: error.code});
             });
         });
 
+    router.route("/subreddit/:name/activity")
+    	.get((req, res) => {
+    		const subreddit = new Subreddit(account);
+    		const options = { subreddit: req.params.name };
+    		subreddit.fetchActivity(options)
+    		.then(data => {
+            	return res.status(200).json(data);
+            })
+    		.catch(error => {
+                return res.status(error.code).json({type: error.name, message: error.message, code: error.code});
+            });
+    	});
 };

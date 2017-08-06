@@ -157,31 +157,33 @@ module.exports = class Cache {
     //     key: "[after]",
     //     value: [Listing]
     // }
-    storeJSONHash(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(_.isEmpty(options.map) || _.isEmpty(options.key) || _.isEmpty(options.value)) {
-                return resolve(null);
-            }
-            const valueToStore = JSON.stringify(options.value);
-            return this.redis
-            .hmset(options.map, options.key, valueToStore, "EX", options.exp)
-            .then(resolve)
-            .catch(reject);
-        });
+    async storeJSONHash(options = {}) {
+        if(_.isEmpty(options.map) || _.isEmpty(options.key) || _.isEmpty(options.value)) {
+            return resolve(null);
+        }
+        const valueToStore = JSON.stringify(options.value);
+        try {
+        	if(options.exp) {
+        		return await this.redis.hmset(options.map, options.key, valueToStore, "EX", options.exp);
+        	} else {
+        		return await this.redis.hmset(options.map, options.key, valueToStore);
+        	}
+        } catch(e) {
+        	throw e;
+        }
     }
 
     // { map: "[subreddit]:[sort]", "key": "[after]" }
-    getJSONHash(options = {}) {
-        return new Promise((resolve, reject) => {
-            if(_.isEmpty(options.map) || _.isEmpty(options.key)) {
-                return resolve(null);
-            }
-            return this.redis
-            .hget(options.map, options.key)
-            .then(JSON.parse)
-            .then(resolve)
-            .catch(reject);
-        });
+    async getJSONHash(options = {}) {
+        if(_.isEmpty(options.map) || _.isEmpty(options.key)) {
+            return resolve(null);
+        }
+        try {
+            let result = await this.redis.hget(options.map, options.key);
+            return JSON.parse(result);
+        } catch(e) {
+        	throw e;
+        }
     }
 
     // { key: "[post].id", value: Submission}

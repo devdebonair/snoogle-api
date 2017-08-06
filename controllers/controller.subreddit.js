@@ -1,6 +1,7 @@
 const RedditController = require("./controller.reddit");
 const paginate = require("../helpers/helper.array").paginate;
 const Cache = require("../cache/cache.subreddit");
+const Redis = require("../cache");
 const formatPost = require("../helpers/helper.listing").formatPost;
 const fetchMedia = require("../helpers/helper.listing").fetchMedia;
 
@@ -69,6 +70,37 @@ module.exports = class Subreddit extends RedditController {
             return await this.snoo.getSubreddit(options.subreddit).submitSelfpost(options);
         } catch(e) {
             throw e;
+        }
+    }
+
+    async fetchActivity(options = {}) {
+    	if(this._.isEmpty(options.subreddit)) {
+            throw new this.RedditError("InvalidArguments", "Must provide subreddit", 500);
+        }
+       	options.limit = 100;
+        try {
+        	let cachedActivity = await Redis.shared().getJSONHash({ map: "activity", key: options.subreddit});
+        	if(cachedActivity) {
+        		return cachedActivity;
+        	} else {
+	        	let newPosts = await this.snoo.getNew(options.subreddit, options);
+	        	let latestUpload = newPosts[0].created || null;
+	        	let status = "active";
+	        	let discussionPercentage = newPosts.filter(submission => submission.is_self).length / newPosts.length;
+	        	let linkPercentage = 1 - discussionPercentage;
+	        	let activity = {
+	        		subreddit: options.subreddit,
+	        		status: status,
+	        		latest_post: latestUpload,
+	        		percentage_discussion: discussionPercentage,
+	        		percentage_link: linkPercentage
+	        	};
+	        	Redis.shared().storeJSONHash({ map: "activity", key: options.subreddit, value: activity});
+	        	return activity;
+        	}
+        } catch(e) {
+        	console.log(e);
+        	throw e;
         }
     }
 
