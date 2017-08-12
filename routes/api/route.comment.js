@@ -1,10 +1,15 @@
 const Comment = require("../../controllers").Comment;
 const account = require("../../config").reddit;
+const _ = require("lodash");
 
 module.exports = (router) => {
     router.route("/comments/:id")
         .get((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.fetch(options)
             .then(data => {
@@ -16,7 +21,11 @@ module.exports = (router) => {
             });
         })
         .put((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id, text: req.body.text};
             comment.edit(options)
             .then(data => {
@@ -29,7 +38,11 @@ module.exports = (router) => {
             });
         })
         .delete((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.delete(options)
             .then(data => {
@@ -43,7 +56,11 @@ module.exports = (router) => {
 
     router.route("/comments/:id/upvote")
         .post((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.upvote(options)
             .then(data => {
@@ -57,7 +74,11 @@ module.exports = (router) => {
 
     router.route("/comments/:id/downvote")
         .post((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.downvote(options)
             .then(data => {
@@ -71,7 +92,11 @@ module.exports = (router) => {
 
     router.route("/comments/:id/save")
         .post((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.save(options)
             .then(data => {
@@ -85,7 +110,11 @@ module.exports = (router) => {
 
     router.route("/comments/:id/unsave")
         .post((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.unsave(options)
             .then(data => {
@@ -99,7 +128,11 @@ module.exports = (router) => {
 
     router.route("/comments/:id/unvote")
         .post((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id};
             comment.unvote(options)
             .then(data => {
@@ -113,7 +146,11 @@ module.exports = (router) => {
 
     router.route("/comments/:id/reply")
         .post((req, res) => {
-            const comment = new Comment(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const comment = new Comment(accountOptions);
             const options = {id: req.params.id, text: req.body.text};
             comment.reply(options)
             .then(data => {

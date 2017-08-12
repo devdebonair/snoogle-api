@@ -5,9 +5,12 @@ const _ = require("lodash");
 module.exports = (router) => {
     router.route("/multireddits")
         .post((req, res) => {
-            const multi = new Multireddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const multi = new Multireddit(accountOptions);
             const options = {name: req.body.name, description: req.body.description, subreddits: req.body.subreddits};
-            console.log(options);
             multi.create(options)
             .then(data => {
                 return res.status(200).json(data);
@@ -20,7 +23,11 @@ module.exports = (router) => {
 
     router.route("/multireddits/:name")
         .delete((req, res) => {
-            const multi = new Multireddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const multi = new Multireddit(accountOptions);
             const options = {name: req.params.name};
             multi.delete(options)
             .then(data => {
@@ -32,7 +39,11 @@ module.exports = (router) => {
             });
         })
         .put((req, res) => {
-            const multi = new Multireddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const multi = new Multireddit(accountOptions);
             const options = {
                 name: req.params.name,
                 edits: {
@@ -57,7 +68,11 @@ module.exports = (router) => {
 
     router.route("/multireddits/:name/subreddits")
         .post((req, res) => {
-            const multi = new Multireddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const multi = new Multireddit(accountOptions);
             const options = {name: req.params.name, subreddit: req.body.subreddit};
             multi.addSubreddit(options)
             .then(data => {
@@ -69,7 +84,11 @@ module.exports = (router) => {
             });
         })
         .delete((req, res) => {
-            const multi = new Multireddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const multi = new Multireddit(accountOptions);
             const options = {name: req.params.name, subreddit: req.body.subreddit};
             multi.removeSubreddit(options)
             .then(data => {
@@ -83,7 +102,11 @@ module.exports = (router) => {
 
     router.route("/multireddits/copy")
         .post((req, res) => {
-            const multi = new Multireddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const multi = new Multireddit(accountOptions);
             const options = {user: req.body.user, user_multiname: req.body.user_multiname, new_multiname: req.body.new_multiname};
             multi.copy(options)
             .then(data => {

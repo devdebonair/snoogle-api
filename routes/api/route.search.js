@@ -1,10 +1,15 @@
 const Search = require("../../controllers").Search;
 const account = require("../../config").reddit;
+const _ = require("lodash");
 
 module.exports = (router) => {
     router.route("/search/photos")
         .get((req, res) => {
-            const search = new Search(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const search = new Search(accountOptions);
             const options = {
                 time: req.query.time,
                 subreddit: req.query.subreddit,
@@ -23,7 +28,11 @@ module.exports = (router) => {
 
     router.route("/search/videos")
         .get((req, res) => {
-            const search = new Search(account);
+            let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const search = new Search(accountOptions);
             const options = {
                 time: req.query.time,
                 subreddit: req.query.subreddit,
@@ -42,7 +51,11 @@ module.exports = (router) => {
 
     router.route("/search/links")
         .get((req, res) => {
-            const search = new Search(account);
+            let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const search = new Search(accountOptions);
             const options = {
                 time: req.query.time,
                 subreddit: req.query.subreddit,
@@ -61,7 +74,11 @@ module.exports = (router) => {
 
     router.route("/search/subreddits")
         .get((req, res) => {
-            const search = new Search(account);
+            let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const search = new Search(accountOptions);
             const options = {
                 query: req.query.term
             };
@@ -76,7 +93,11 @@ module.exports = (router) => {
 
     router.route("/search/discussions")
         .get((req, res) => {
-            const search = new Search(account);
+            let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const search = new Search(accountOptions);
             const options = {
                 time: req.query.time,
                 subreddit: req.query.subreddit,

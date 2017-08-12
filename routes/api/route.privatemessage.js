@@ -1,10 +1,15 @@
 const PrivateMessage = require("../../controllers").PrivateMessage;
 const account = require("../../config").reddit;
+const _ = require("lodash");
 
 module.exports = (router) => {
     router.route("/message")
         .post((req, res) => {
-            const pm = new PrivateMessage(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const pm = new PrivateMessage(accountOptions);
             const options = {to: req.body.to, subject: req.body.subject, text: req.body.text};
             pm.compose(options)
             .then(data => {
@@ -18,7 +23,11 @@ module.exports = (router) => {
 
     router.route("/message/:id")
         .get((req, res) => {
-            const pm = new PrivateMessage(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const pm = new PrivateMessage(accountOptions);
             const options = {id: req.params.id};
             pm.fetch(options)
             .then(data => {
@@ -30,7 +39,11 @@ module.exports = (router) => {
             });
         })
         .delete((req, res) => {
-            const pm = new PrivateMessage(account);
+            let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const pm = new PrivateMessage(accountOptions);
             const options = {id: req.params.id};
             pm.delete(options)
             .then(data => {
@@ -44,7 +57,11 @@ module.exports = (router) => {
 
     router.route("/message/:id/reply")
         .post((req, res) => {
-            const pm = new PrivateMessage(account);
+            let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const pm = new PrivateMessage(accountOptions);
             const options = {id: req.params.id, text: req.body.text};
             pm.reply(options)
             .then(data => {

@@ -8,7 +8,11 @@ module.exports = (router) => {
 
     router.route("/frontpage/:sort")
         .get((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             let options = { sort: req.params.sort, after: req.body.after };
             subreddit.getListing(options)
             .then(data => {
@@ -21,7 +25,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name")
         .get((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             let options = {subreddit: req.params.name};
             subreddit.fetch(options)
             .then(data => {
@@ -34,7 +42,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name/listing/:sort")
         .get((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             const after = req.query.after;
             let options = {subreddit: req.params.name, sort: req.params.sort, after: after};
 
@@ -50,7 +62,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name/subscribe")
         .post((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             let options = {subreddit: req.params.name};
             subreddit.subscribe(options)
             .then(data => {
@@ -63,7 +79,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name/unsubscribe")
         .post((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             let options = {subreddit: req.params.name};
             subreddit.unsubscribe(options)
             .then(data => {
@@ -76,7 +96,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name/submit/text")
         .post((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             const options = { title: req.body.title, text: req.body.text, subreddit: req.params.name };
             subreddit.submitText(options)
             .then(data => {
@@ -89,7 +113,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name/submit/link")
         .post((req, res) => {
-            const subreddit = new Subreddit(account);
+        	let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+            const subreddit = new Subreddit(accountOptions);
             const options = { title: req.body.title, url: req.body.url, subreddit: req.params.name };
             subreddit.submitLink(options)
             .then(data => {

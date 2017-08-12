@@ -7,7 +7,13 @@ const snoowrapHelper = require("../helpers/helper.snoowrap");
 
 module.exports = class RedditController {
     constructor(options) {
-        this.snoo = new snoowrap(options);
+    	this.account = options;
+    	this.snoowrap = snoowrap;
+    	try {
+        	this.snoo = new this.snoowrap(this.account);
+    	} catch(e) {
+    		// console.log(e);
+    	}
         this.fetcher = new Fetcher();
         this._ = lodash;
         this.formatListing = helperListing.format;

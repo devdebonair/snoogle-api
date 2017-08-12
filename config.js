@@ -2,9 +2,7 @@ module.exports = {
     reddit: {
         userAgent: process.env.REDDIT_USER_AGENT,
         clientId: process.env.REDDIT_CLIENT_ID,
-        clientSecret: process.env.REDDIT_CLIENT_SECRET,
-        username: process.env.REDDIT_USERNAME,
-        password: process.env.REDDIT_PASSWORD
+        redirectUri: process.env.REDDIT_REDIRECT_URI
     },
     imgur: {
         clientId: process.env.IMGUR_CLIENT_ID,
