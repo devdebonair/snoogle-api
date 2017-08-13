@@ -5,6 +5,11 @@ const _ = require("lodash");
 const paginate = require("../../helpers/helper.listing").paginate;
 
 module.exports = (router) => {
+	router.route("/swag")
+		.get((req, res) => {
+			console.log("redirecting");
+			return res.redirect("snoogle://reddit/auth");
+		});
 
     router.route("/frontpage/:sort")
         .get((req, res) => {
@@ -13,7 +18,7 @@ module.exports = (router) => {
         	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
         	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
             const subreddit = new Subreddit(accountOptions);
-            let options = { sort: req.params.sort, after: req.body.after };
+            let options = { sort: req.params.sort, after: req.query.after };
             subreddit.getListing(options)
             .then(data => {
                 return res.status(200).json(data);
@@ -130,7 +135,11 @@ module.exports = (router) => {
 
     router.route("/subreddit/:name/activity")
     	.get((req, res) => {
-    		const subreddit = new Subreddit(account);
+    		let accessToken = req.get("AccessToken");
+        	let refreshToken = req.get("RefreshToken");
+        	if(_.isEmpty(refreshToken) || _.isEmpty(accessToken)) { return res.status(403).json({message: "Must send access and refresh token."}); }
+        	let accountOptions = _.assign({accessToken: accessToken, refreshToken: refreshToken}, account);
+    		const subreddit = new Subreddit(accountOptions);
     		const options = { subreddit: req.params.name };
     		subreddit.fetchActivity(options)
     		.then(data => {

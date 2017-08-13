@@ -10,6 +10,7 @@ module.exports = class Auth extends RedditController {
     	let keys = this._.keys(scopes);
     	let options = {
     		clientId: '82Lt0biR5aH4ng',
+    		clientSecret: "",
   			scope: keys,
   			redirectUri: "snoogle://reddit/auth",
   			permanent: true

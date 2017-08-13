@@ -148,39 +148,9 @@ module.exports = class Subreddit extends RedditController {
     async getListing(options = {}) {
         const query = { subreddit: options.subreddit, sort: options.sort, after: (options.after || "null") };
         try {
-            let listingFromCache = await Cache.getListing(query);
-            if(this._.isEmpty(listingFromCache)) {
-                this._cachePages({subreddit: options.subreddit, sort: options.sort}).catch(console.log);
-                return await this._getListing(options);
-            }
-            return listingFromCache;
+	        return await this._getListing(options);
         } catch(error) {
             throw error;
-        }
-    }
-
-    async _cachePages(options = {}) {
-        try {
-            const cacheDetails = this._.assign(options, {limit: CACHE_CAPACITY});
-            let listing = await this._getListing(cacheDetails);
-
-            const pages = paginate({items: listing.data, pageSize: CACHE_PAGE_SIZE});
-            const pagesWithFormat = pages.map((listingData, index, origin) => {
-                let formatting = {};
-                formatting.data = listingData;
-                formatting.isFinished = false;
-                formatting.after = formatting.data[formatting.data.length - 1].name;
-                return formatting;
-            });
-
-            let cacheObject = {};
-            cacheObject.subreddit = cacheDetails.subreddit;
-            cacheObject.sort = cacheDetails.sort;
-            cacheObject.exp = CACHE_EXPIRATION;
-            cacheObject.listings = pagesWithFormat;
-            return await Cache.storeManyListings(cacheObject);
-        } catch(e) {
-            throw e;
         }
     }
 };
