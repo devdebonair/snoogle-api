@@ -7,7 +7,6 @@ const paginate = require("../../helpers/helper.listing").paginate;
 module.exports = (router) => {
 	router.route("/swag")
 		.get((req, res) => {
-			console.log("redirecting");
 			return res.redirect("snoogle://reddit/auth");
 		});
 

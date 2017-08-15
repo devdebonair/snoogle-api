@@ -16,6 +16,11 @@ module.exports = (router) => {
             });
         });
 
+    router.route("/auth/redirectUri")
+    	.get((req, res) => {
+    		res.redirect("uri");
+    	});
+
     router.route("/auth/token")
         .get((req, res) => {
         	let code = req.get("AuthCode");
