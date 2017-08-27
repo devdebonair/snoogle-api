@@ -80,11 +80,16 @@ exports.fetchMedia = async (post) => {
         post.hamlet_media.push(preview);
     }
 
-    const options = {
+    let options = {
         key: cacheKey,
         value: _.pick(post, ["hamlet_media"]),
         exp: null
     };
+
+    if(media.type === "movie") {
+    	// some youtube-dl links are temporary
+    	options.exp = 60 * 60;
+    }
 
     Cache.shared().storeJSON(options).then().catch(error => {
         console.log(error);
