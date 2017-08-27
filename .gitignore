@@ -4,3 +4,4 @@ scripts
 .env
 dump.rdb
 test.js
+package-lock.json

@@ -2,12 +2,14 @@ const _ = require("lodash");
 const URL = require("url");
 const Imgur = require("../services/service.imgur");
 const Gfycat = require("../services/service.gfycat");
+const YoutubeDL = require("../services/service.youtubedl");
 
 module.exports = class Miner {
 	constructor() {
         this.services = {};
         this.services.imgur = new Imgur();
         this.services.gfycat = new Gfycat();
+        this.services.youtubedl = new YoutubeDL();
 	}
 
     async fetch(url) {
@@ -30,7 +32,7 @@ module.exports = class Miner {
         if(this.isGfycat(url)) {
             return this.services.gfycat;
         }
-        return null;
+        return this.services.youtubedl;
     }
 
     isImgur(url) {
