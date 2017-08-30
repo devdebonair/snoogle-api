@@ -27,5 +27,22 @@ module.exports = {
         family: process.env.REDIS_FAMILY,
         password: process.env.REDIS_PASSWORD,
         db: process.env.REDIS_DB
-    }
+    },
+    supportedVideoSites: [
+    	"youtube",
+    	"vimeo",
+    	"vid.me",
+    	"youtu",
+    	"instagram",
+    	"streamable",
+    	"spankbang",
+    	"xhamster",
+    	"spankwire",
+    	"twitch",
+    	"pornhub",
+    	"youporn",
+    	"youjizz",
+    	"xvideos",
+    	"worldstarhiphop"
+    ]
 };

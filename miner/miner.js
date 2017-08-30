@@ -3,6 +3,7 @@ const URL = require("url");
 const Imgur = require("../services/service.imgur");
 const Gfycat = require("../services/service.gfycat");
 const YoutubeDL = require("../services/service.youtubedl");
+const supportedVideos = require("../config").supportedVideoSites;
 
 module.exports = class Miner {
 	constructor() {
@@ -32,7 +33,9 @@ module.exports = class Miner {
         if(this.isGfycat(url)) {
             return this.services.gfycat;
         }
-        return this.services.youtubedl;
+        if(this.isYoutubeDL(url)) {
+        	return this.services.youtubedl;
+        }
     }
 
     isImgur(url) {
@@ -45,5 +48,14 @@ module.exports = class Miner {
         let parsedURL = URL.parse(url);
         let hostname = parsedURL.hostname;
         return hostname.toLowerCase().includes("gfycat");
+    }
+
+    isYoutubeDL(url) {
+    	let parsedURL = URL.parse(url);
+        let hostname = parsedURL.hostname;
+        for(let i = 0; i < supportedVideos.length; i++) {
+        	if(hostname.toLowerCase().includes(supportedVideos[i])){ return true }
+        }
+    	return false;
     }
 };

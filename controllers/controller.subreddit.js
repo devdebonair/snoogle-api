@@ -99,7 +99,6 @@ module.exports = class Subreddit extends RedditController {
 	        	return activity;
         	}
         } catch(e) {
-        	console.log(e);
         	throw e;
         }
     }
