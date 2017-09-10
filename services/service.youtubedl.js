@@ -11,9 +11,14 @@ module.exports = class YoutubeDL {
 			let parsedURL = URL.parse(url);
 	        let hostname = parsedURL.hostname;
 	        let domainURL = hostname;
-	        if(hostname.toLowerCase().includes("youtu.be")) {
+	        let poster = info.thumbnail;
+	        if(hostname.toLowerCase().includes("youtu.be") || hostname.toLowerCase().includes("youtube")) {
 	        	domainURL = "youtube.com";
+	        	if(poster.toLowerCase().includes("ytimg")) {
+	        		poster = poster.replace("/default", "/maxresdefault");
+	        	}
 	        }
+
 			return [{
 	            type: "movie",
 	            width: parseInt(info.width),
