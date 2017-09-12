@@ -5,6 +5,7 @@ const remarkStrip = require("strip-markdown");
 const markdownParser = require("../markdown");
 const Miner = require("../miner");
 const Cache = require("../cache");
+const URL = require("url");
 
 exports.format = (listing) => {
 
@@ -56,12 +57,15 @@ exports.formatPost = (post) => {
 
 exports.fetchMedia = async (post) => {
     let miner = new Miner();
+    let parsedURL = URL.parse(post.url);
+    let mapKey = parsedURL.hostname;
     let cacheKey = post.url;
     post.hamlet_media = [];
     let cache = null;
 
     try {
-        cache = await Cache.shared().getJSON({key: cacheKey});
+        // cache = await Cache.shared().getJSON({key: cacheKey});
+        cache = await Cache.shared().getJSONHash({map: mapKey, key: cacheKey});
     } catch(e) {
         console.log(e);
     }
@@ -81,14 +85,17 @@ exports.fetchMedia = async (post) => {
     }
 
     let options = {
+    	map: mapKey,
         key: cacheKey,
         value: _.pick(post, ["hamlet_media"]),
         exp: null
     };
-
-    Cache.shared().storeJSON(options).then().catch(error => {
+    Cache.shared().storeJSONHash(options).then().catch(error => {
         console.log(error);
     });
+    // Cache.shared().storeJSON(options).then().catch(error => {
+    //     console.log(error);
+    // });
 
     return post;
 };

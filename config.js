@@ -43,6 +43,10 @@ module.exports = {
     	"youporn",
     	"youjizz",
     	"xvideos",
-    	"worldstarhiphop"
+    	"worldstarhiphop",
+    	"oddshot.tv",
+    	"animestigma",
+    	"redtube",
+    	"erome.com"
     ]
 };

@@ -10,12 +10,13 @@ module.exports = class YoutubeDL {
 			let info = await this.getInfo(url);
 			let parsedURL = URL.parse(url);
 	        let hostname = parsedURL.hostname;
-	        let domainURL = hostname;
+	        // remove subdomain from domain
+	        let domainURL = parsedURL.host.match(/\w+\..(\w+)$/)[0] || parsedURL.host;
 	        let poster = info.thumbnail;
 	        if(hostname.toLowerCase().includes("youtu.be") || hostname.toLowerCase().includes("youtube")) {
 	        	domainURL = "youtube.com";
 	        	if(poster.toLowerCase().includes("ytimg")) {
-	        		poster = poster.replace("/default", "/maxresdefault");
+	        		poster = poster.replace("/default", "/hqdefault");
 	        	}
 	        }
 
@@ -23,7 +24,7 @@ module.exports = class YoutubeDL {
 	            type: "movie",
 	            width: parseInt(info.width),
 	            height: parseInt(info.height),
-	            poster: info.thumbnail,
+	            poster: poster,
 	            url: info.url,
 	            description: info.description,
 	            title: info.title,
