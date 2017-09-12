@@ -7,6 +7,7 @@ const Comment = require("./controller.comment");
 const Me = require("./controller.me");
 const Search = require("./controller.search");
 const Auth = require("./controller.auth");
+const Media = require("./controller.media");
 
 exports.User = User;
 exports.Submission = Submission;
@@ -17,3 +18,4 @@ exports.Comment = Comment;
 exports.Me = Me;
 exports.Search = Search;
 exports.Auth = Auth;
+exports.Media = Media;

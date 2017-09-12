@@ -76,6 +76,19 @@ exports.fetchMedia = async (post) => {
     }
 
     let media = await miner.fetch(post.url);
+    
+    // Store temporarily in expire map for valid movie url
+    if(media.length === 1 && media[0].type === "movie") {
+    	let options = {
+	        key: `expiry-media:${cacheKey}`,
+	        value: media,
+	        exp: 60*60*6
+	    };
+	    Cache.shared().storeJSON(options).then().catch(error => {
+	        console.log(error);
+	    });
+    }
+
     post.hamlet_media = media;
 
     let hasEmptyMediaWithPreview = (_.isEmpty(post.hamlet_media) && !_.isEmpty(post.preview));
@@ -90,13 +103,10 @@ exports.fetchMedia = async (post) => {
         value: _.pick(post, ["hamlet_media"]),
         exp: null
     };
+    // Store forever in domain map
     Cache.shared().storeJSONHash(options).then().catch(error => {
         console.log(error);
     });
-    // Cache.shared().storeJSON(options).then().catch(error => {
-    //     console.log(error);
-    // });
-
     return post;
 };
 

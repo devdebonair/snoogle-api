@@ -163,11 +163,7 @@ module.exports = class Cache {
         }
         const valueToStore = JSON.stringify(options.value);
         try {
-        	if(options.exp) {
-        		return await this.redis.hmset(options.map, options.key, valueToStore, "EX", options.exp);
-        	} else {
-        		return await this.redis.hmset(options.map, options.key, valueToStore);
-        	}
+        	return await this.redis.hmset(options.map, options.key, valueToStore);
         } catch(e) {
         	throw e;
         }

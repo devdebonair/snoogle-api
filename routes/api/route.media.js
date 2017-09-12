@@ -1,11 +1,11 @@
-const Miner = require("../../miner");
+const Media = require("../../controllers").Media;
 
 module.exports = (router) => {
 	router.route("/media")
 		.get((req, res) => {
-			let miner = new Miner();
-			miner
-			.fetch(req.query.url)
+			let media = new Media();
+			media
+			.fetch({ url: req.query.url })
 			.then((data) => {
 				return res.status(200).json(data);
 			})
