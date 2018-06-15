@@ -35,18 +35,9 @@ module.exports = {
     	"youtu",
     	"instagram",
     	"streamable",
-    	"spankbang",
-    	"xhamster",
-    	"spankwire",
     	"twitch",
-    	"pornhub",
-    	"youporn",
-    	"youjizz",
-    	"xvideos",
-    	"worldstarhiphop",
+        "worldstarhiphop",
     	"oddshot.tv",
-    	"animestigma",
-    	"redtube",
-    	"erome.com"
+    	"animestigma"
     ]
 };
